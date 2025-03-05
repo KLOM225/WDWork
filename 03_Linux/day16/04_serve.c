@@ -18,27 +18,28 @@ int main(void){
     //给socket端点绑定端口和IP
     int retbind = bind(sock_fd, (struct sockaddr *)&sock, sizeof(sock));
     ERROR_CHECK(retbind, -1, "bind");
-    //监听socket端口
+    // 监听socket端口
     listen(sock_fd, 10);
-    //从socket中获取一个连接，创建新的专用链接
-    int connect_fd = accept(sock_fd, NULL, NULL);
-    ERROR_CHECK(connect_fd, -1, "accept");
-    //设置监听集合
+    // 从socket中获取一个连接，创建新的专用链接
+    // int connect_fd = accept(sock_fd, NULL, NULL);
+    // ERROR_CHECK(connect_fd, -1, "accept");
+    // 设置监听集合
     fd_set next_set;
     FD_ZERO(&next_set);
     FD_SET(sock_fd, &next_set);
-
+    
+    int connect_fd;
     while(1){    
         fd_set set;
         memcpy(&set, &next_set, sizeof(next_set));
         select(10, &set, NULL, NULL, NULL);
-        
+
         if(FD_ISSET(sock_fd, &set)){
-            int connect_fd = accept(sock_fd, NULL, NULL);
+            connect_fd = accept(sock_fd, NULL, NULL);
             ERROR_CHECK(connect_fd, -1, "accept");
-            
+
             FD_CLR(sock_fd, &next_set);
-            
+
             FD_SET(STDIN_FILENO, &next_set);
             FD_SET(connect_fd, &next_set);
         }    
@@ -48,19 +49,18 @@ int main(void){
             ssize_t retrecv = recv(connect_fd, buf, sizeof(buf), 0);
             ERROR_CHECK(retrecv, -1, "recv");
             if(retrecv == 0){
-                printf("对方断开连接");
-                break;
+                printf("对方断开连接\n");
+
+                FD_CLR(STDIN_FILENO, &next_set);
+                FD_CLR(connect_fd, &next_set);
+                close(connect_fd);
+
+                FD_SET(sock_fd, &next_set);
+                continue;
             }
             printf("buf : %s\n",buf);
-            
-            FD_CLR(STDIN_FILENO, &next_set);
-            FD_CLR(connect_fd, &next_set);
-            close(connect_fd);
-
-
-            FD_SET(sock_fd, &next_set);
-            continue;
         }
+
 
 
         if(FD_ISSET(STDIN_FILENO, &set)){
