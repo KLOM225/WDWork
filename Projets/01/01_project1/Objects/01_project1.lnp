@@ -37,6 +37,8 @@
 ".\objects\stm32f10x_wwdg.o"
 ".\objects\uart1.o"
 ".\objects\delay.o"
+".\objects\uart2.o"
+".\objects\uart3.o"
 ".\objects\main.o"
 --strict --scatter ".\Objects\01_project1.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols

@@ -2715,8 +2715,9 @@
     #define configPOST_SLEEP_PROCESSING( x )
 #endif
 
+// 消息队列创建
 #ifndef configUSE_QUEUE_SETS
-    #define configUSE_QUEUE_SETS    0
+    #define configUSE_QUEUE_SETS    1
 #endif
 
 #ifndef portTASK_USES_FLOATING_POINT

@@ -854,6 +854,26 @@
               <FileType>5</FileType>
               <FilePath>.\Utils\Delay.h</FilePath>
             </File>
+            <File>
+              <FileName>UART2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Utils\UART2.c</FilePath>
+            </File>
+            <File>
+              <FileName>UART2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Utils\UART2.h</FilePath>
+            </File>
+            <File>
+              <FileName>UART3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Utils\UART3.c</FilePath>
+            </File>
+            <File>
+              <FileName>UART3.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Utils\UART3.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

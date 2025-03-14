@@ -1,5 +1,5 @@
-#ifndef __UART1_H__
-#define __UART1_H__
+#ifndef __UART2_H__
+#define __UART2_H__
 
 // STM32外设库头文件
 #include "stm32f10x.h" 
@@ -13,12 +13,9 @@
 
 
 extern QueueHandle_t queue;
-//extern char buf[20];
-//extern int size;
 
-void USART1_Init(void);
-
-void USART1_SendByte(uint8_t Byte);
-void printf1(char *format, ...);
+void USART2_Init(void);
+void USART2_SendByte(uint8_t Byte);
+void printf2(char *format, ...);
 
 #endif
