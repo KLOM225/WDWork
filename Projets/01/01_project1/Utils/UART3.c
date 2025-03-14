@@ -37,36 +37,34 @@ void USART3_Init(void) {
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-
-
 	// 启动USART3
 	USART_Cmd(USART3, ENABLE);
 }
 
-
-
-
 void USART3_IRQHandler(void) {
 	if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) {
+		printf1("-----\r\n");
 		char data = USART_ReceiveData(USART3);
-
+		
+		
+		
 		BaseType_t stat = pdTRUE;
-		xQueueSendFromISR(queue, &data, &stat);
+		xQueueSendFromISR(queue3, &data, &stat);
 
 		USART_ClearITPendingBit(USART3, USART_IT_RXNE);
 	}
 }
-
-
-
 
 void USART3_SendByte(uint8_t Byte) {
 	USART_SendData(USART3, Byte);
 	while (USART_GetFlagStatus(USART3, USART_FLAG_TXE) == RESET);
 }
 
-
-
+void USART3_SendString(char *str) {
+    while (*str) {
+        USART3_SendByte((uint8_t)*str++);
+    }
+}
 
 void printf3(char *format, ...)
 {

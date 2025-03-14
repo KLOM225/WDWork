@@ -1,93 +1,69 @@
-#include "stm32f10x.h"    
-#include "freertos.h"
-#include "task.h"
 #include "UART1.h"
+#include "Delay.h"
+#include "UART2.h"
+#include "Bluet_to_wifi.h"
 
-void task1 ( void * arg ){	
-	// 控制PB1的Led显示
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-	GPIO_InitTypeDef initType;
-	initType.GPIO_Pin = GPIO_Pin_1 ;
-	initType.GPIO_Mode = GPIO_Mode_Out_PP;
-	initType.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOB, &initType);
-	
+#define BUF_SIZE 32
+QueueHandle_t queue;
+
+
+void Bluetooth_to_ttl ( void * arg ){	
+	char buf[BUF_SIZE] = {0};
+	int size = 0;
+	char ch = 0;
 	while(1){
-		GPIO_SetBits(GPIOB, GPIO_Pin_1);
-		vTaskDelay(1000);
-		GPIO_ResetBits(GPIOB, GPIO_Pin_1);
-		vTaskDelay(1000);
-	}
-}
-void task2 ( void * arg ){
-	// 控制PA2的Led显示
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	GPIO_InitTypeDef initType;
-	initType.GPIO_Pin =  GPIO_Pin_2;
-	initType.GPIO_Mode = GPIO_Mode_Out_PP;
-	initType.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(GPIOA, &initType);
-	
-	int delay_time = 4000;
-	int stp= 100;
-	int min_time = 100;
+		BaseType_t  ret = xQueueReceive(queue, &ch, 5000);
+		if(ret == pdPASS){
+			buf[size] = ch;
+			size++;
+		}else{
+			if(size > 0){
+				printf1("buf: %s \r\n", buf);
+				
+				char AT_wifi[64];
+				int ret = convert_wifi_config(AT_wifi, buf, sizeof(AT_wifi));
+				printf1("ret = %d\r\n", ret);
+				printf1("Success: %s \r\n", buf);
+				if (convert_wifi_config(AT_wifi, buf, sizeof(AT_wifi)) == 0) {
+        printf("Success: %s\n", buf); 
+        // 输出：AT+CWJAP_DEF="2jj","12uu"
+    }
 
-	while (1) {
-		// 延迟关闭与打开，实现滴滴滴
-		GPIO_ResetBits(GPIOB, GPIO_Pin_2);
-        vTaskDelay(delay_time);
-		
-        GPIO_SetBits(GPIOB, GPIO_Pin_2);
-        vTaskDelay(delay_time);
-		
-		delay_time -= stp;
-		if(delay_time == min_time){
-		GPIO_ResetBits(GPIOB, GPIO_Pin_2);
+    // 错误格式用例
+    if (convert_wifi_config(AT_wifi, buf, sizeof(AT_wifi)) == -1) {
+        printf("Error: Invalid input format\n");
+    }
+
+    // 缓冲区不足用例
+    if (convert_wifi_config(AT_wifi, buf, sizeof(AT_wifi)) == -2) {
+        printf("Error: Output buffer too small\n");
+    }
+				memset(buf, 0, sizeof(buf));
+				size = 0;
+			}
 		}
-    }  
-}
-
-
-void printTaskInfo(TaskHandle_t taskHandle)
-{
-TaskStatus_t xTaskDetails;
-
-// 获取任务信息
-vTaskGetInfo(taskHandle, &xTaskDetails, pdTRUE, eInvalid);
-
-// 打印任务信息
-printf1("Task Name: %s\n", xTaskDetails.pcTaskName);
-printf1("Task Priority: %d\n", xTaskDetails.uxCurrentPriority);
-printf1("Base Priority: %d\n", xTaskDetails.uxBasePriority);
-printf1("Task State: %d\n", xTaskDetails.eCurrentState);
-printf1("Stack Base Address: %p\n", xTaskDetails.pxStackBase);
-printf1("Stack High Water Mark: %d\n", xTaskDetails.usStackHighWaterMark);
-printf1("Task Run Time: %d ticks\n", xTaskDetails.ulRunTimeCounter);
-}
-
-void beginTask(void * arg){
-	TaskHandle_t taskinfo1, taskinfo2;
-	
-	xTaskCreate(task1, "Task1", configMINIMAL_STACK_SIZE, NULL, 3, &taskinfo1);
-	xTaskCreate(task2, "Task2", configMINIMAL_STACK_SIZE, NULL, 3, &taskinfo2);
- 	
-	
-	
-	printTaskInfo(taskinfo1);
-	printTaskInfo(taskinfo2);
-	
-	while(1){
-		
 	}
-	
 }
+
+//void Bluetooth_to_wifi(void *arg){
+//    
+//	char AT_wifi[64];
+//    if (convert_wifi_config(AT_wifi, buf, sizeof(AT_wifi)) == 0) {
+//        printf1("Success: %s\n", buf); 
+//		}
+//}
+
 int main(void){
 	USART1_Init();
-	
-	xTaskCreate(beginTask, "beginTask", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
-	
+	USART2_Init();
+	Delay_Init();
+	NVIC_PriorityGroupConfig( NVIC_PriorityGroup_4 );
+	queue = xQueueCreate(64, 1);
+	xTaskCreate(Bluetooth_to_ttl, "Bluetooth_to_ttl", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+//	xTaskCreate(Bluetooth_to_wifi, "Bluetooth_to_wifi", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
 	vTaskStartScheduler();
 	
 	while(1){
-		}
+
+	}
 }

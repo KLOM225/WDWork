@@ -47,10 +47,11 @@ void USART2_IRQHandler(void) {
 		char data = USART_ReceiveData(USART2);
 		
 		BaseType_t stat = pdTRUE;
-		xQueueSendFromISR(queue, &data, &stat);
+		xQueueSendFromISR(queue2, &data, &stat);
 
 		USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 	}
+	
 }
 
 
@@ -60,7 +61,11 @@ void USART2_SendByte(uint8_t Byte) {
 	while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);
 }
 
-
+void USART2_SendString(char *str) {
+    while (*str) {
+        USART2_SendByte((uint8_t)*str++);
+    }
+}
 
 
 void printf2(char *format, ...)

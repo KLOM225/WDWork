@@ -12,13 +12,14 @@
 #include <string.h>
 
 
-extern QueueHandle_t queue;
+extern QueueHandle_t queue1,queue2,queue3;
 //extern char buf[20];
 //extern int size;
 
 void USART1_Init(void);
 
 void USART1_SendByte(uint8_t Byte);
+void USART1_SendString(char *str);
 void printf1(char *format, ...);
 
 #endif

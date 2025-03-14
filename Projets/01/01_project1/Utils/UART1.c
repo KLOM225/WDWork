@@ -32,11 +32,10 @@ void USART1_Init(void){  //串口
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	NVIC_InitTypeDef NVIC_InitStructure;
 	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 12;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-
 
 	// 启动USART1
 	USART_Cmd(USART1, ENABLE);
@@ -47,21 +46,26 @@ void USART1_IRQHandler(void) {
 		char data = USART_ReceiveData(USART1);
 
 		BaseType_t stat = pdTRUE;
-		xQueueSendFromISR(queue, &data, &stat);
+		xQueueSendFromISR(queue1, &data, &stat);
 
 		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
 	}
+	
 }
 
 
 
 // 发送字节
-void USART1_SendByte(uint8_t Byte){
+void USART1_SendByte(uint8_t Byte) {
 	USART_SendData(USART1, Byte);
-	while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
 }
 
-
+void USART1_SendString(char *str) {
+    while (*str) {
+        USART1_SendByte((uint8_t)*str++);
+    }
+}
 
 void printf1(char *format, ...)
 {
