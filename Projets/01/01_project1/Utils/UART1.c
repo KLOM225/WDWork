@@ -44,7 +44,8 @@ void USART1_Init(void){  //串口
 void USART1_IRQHandler(void) {
 	if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET) {
 		char data = USART_ReceiveData(USART1);
-
+//        printf1("****\r\n");
+		
 		BaseType_t stat = pdTRUE;
 		xQueueSendFromISR(queue1, &data, &stat);
 
@@ -61,11 +62,11 @@ void USART1_SendByte(uint8_t Byte) {
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
 }
 
-void USART1_SendString(char *str) {
-    while (*str) {
-        USART1_SendByte((uint8_t)*str++);
-    }
-}
+//void USART1_SendString(char *str) {
+//    while (*str) {
+//        USART1_SendByte((uint8_t)*str++);
+//    }
+//}
 
 void printf1(char *format, ...)
 {

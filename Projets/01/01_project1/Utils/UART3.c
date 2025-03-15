@@ -1,7 +1,5 @@
 #include "UART3.h"
 
-
-
 void USART3_Init(void) {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
@@ -26,7 +24,7 @@ void USART3_Init(void) {
 	USART_InitStructure.USART_Parity = USART_Parity_No;
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-	USART_Init(USART2, &USART_InitStructure);
+	USART_Init(USART3, &USART_InitStructure);
 
 	// 配置接收中断 
 	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
@@ -43,11 +41,8 @@ void USART3_Init(void) {
 
 void USART3_IRQHandler(void) {
 	if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) {
-		printf1("-----\r\n");
+		//printf1("-----\r\n");
 		char data = USART_ReceiveData(USART3);
-		
-		
-		
 		BaseType_t stat = pdTRUE;
 		xQueueSendFromISR(queue3, &data, &stat);
 
@@ -60,11 +55,11 @@ void USART3_SendByte(uint8_t Byte) {
 	while (USART_GetFlagStatus(USART3, USART_FLAG_TXE) == RESET);
 }
 
-void USART3_SendString(char *str) {
-    while (*str) {
-        USART3_SendByte((uint8_t)*str++);
-    }
-}
+//void USART3_SendString(char *str) {
+//    while (*str) {
+//        USART3_SendByte((uint8_t)*str++);
+//    }
+//}
 
 void printf3(char *format, ...)
 {

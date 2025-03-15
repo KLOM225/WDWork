@@ -12,7 +12,7 @@
  */
 int convert_wifi_config(const char* input, char* output, size_t out_len) {
     // 参数有效性检查
-    if (!input || !output || out_len < 32) {
+    if (!input || !output || out_len < 50) {
         return -2;
     }
 
@@ -34,7 +34,7 @@ int convert_wifi_config(const char* input, char* output, size_t out_len) {
 
     // 分割SSID和密码
     size_t ssid_len = eq_pos - middle;
-    size_t pass_len = (input + len - 2) - eq_pos - 1;
+    size_t pass_len = (input + len - 2) - eq_pos;
 
     // 构造AT指令（带缓冲区溢出保护）
     int ret = snprintf(output, out_len, 

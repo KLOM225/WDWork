@@ -61,11 +61,11 @@ void USART2_SendByte(uint8_t Byte) {
 	while (USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET);
 }
 
-void USART2_SendString(char *str) {
-    while (*str) {
-        USART2_SendByte((uint8_t)*str++);
-    }
-}
+//void USART2_SendString(char *str) {
+//    while (*str) {
+//        USART2_SendByte((uint8_t)*str++);
+//    }
+//}
 
 
 void printf2(char *format, ...)
