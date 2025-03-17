@@ -12,7 +12,7 @@ void AD_Init(void)
 	// GPIO初始化
 	GPIO_InitTypeDef gpioInit;
 	gpioInit.GPIO_Mode = GPIO_Mode_AIN;
-	gpioInit.GPIO_Pin =  GPIO_Pin_1 | GPIO_Pin_4; // 使用PA1和PA4采样模拟数据
+	gpioInit.GPIO_Pin =  GPIO_Pin_5 | GPIO_Pin_6; // 使用PA1和PA4采样模拟数据
 	gpioInit.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &gpioInit);
 

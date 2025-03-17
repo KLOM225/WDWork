@@ -10,73 +10,38 @@
 
 QueueHandle_t TTL_queue, Blue_queue, ESP_queue, TCP_queue;
 
-// tcp连接任务
-void tcp_connect(void * arg) {
-    char buf4[BUF_SIZE] = {0};
-	while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CWJAP_DEF=") && strstr(buf4, "OK")) {
-            memset(buf4, 0, sizeof(buf4));
-            break;
-        }
-    }
+void tcp_connect(void * arg);
+void Ttl_to_wifi(void * arg);
+void wifi_to_ttl(void * arg);
+void Bluetooth_to_ttl(void * arg);
+void getMSG(char * buf);
 
-    printf3("AT+CIPSTART=\"TCP\",\"47.115.220.165\",9002\r\n");
-    while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CIPSTART") && strstr(buf4, "OK")) {
-			memset(buf4, 0, sizeof(buf4));
-            break;
-        }
-    }
-    
-    printf3("AT+CIPMODE=1\r\n");
-    while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CIPMODE=1") && strstr(buf4, "OK")) {
-			memset(buf4, 0, sizeof(buf4));
-            break;
-        }
-    }
+int main(void) {
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+    USART1_Init();
+    USART2_Init();
+    USART3_Init();
+    Delay_Init();
+	AD_Init();
+	
+    TTL_queue = xQueueCreate(50, 1);
+    Blue_queue = xQueueCreate(50, 1);
+    ESP_queue = xQueueCreate(50, 1);
+    TCP_queue = xQueueCreate(2, BUF_SIZE);
 
-    
-    printf3("AT+CIPSEND\r\n");
+    xTaskCreate(Bluetooth_to_ttl, "Bluetooth_to_ttl", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+    xTaskCreate(Ttl_to_wifi, "Ttl_to_wifi", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+    xTaskCreate(wifi_to_ttl, "wifi_to_ttl", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+    xTaskCreate(tcp_connect, "tcp_connect", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+
+    vTaskStartScheduler();
+
     while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CIPSEND") && strstr(buf4, "OK")) {
-            memset(buf4, 0, sizeof(buf4));
-            break;
-        }
+
     }
-	
-	//连接完成
-	while(1);
-	
-	//直到
-//	while(1){
-//		xQueueReceive(TCP_queue, buf4, 1000);
-//		if (strstr(buf4, "close")) {
-//            memset(buf4, 0, sizeof(buf4));
-//            break;
-//        }
-//	}
-//	printf3("+++");
-//	
-//	printf3("AT+CIPMODE=0\r\n");
-//	while(1){
-//		
-//		if(strstr(buf4, "AT+CIPMODE=0") && strstr(buf4, "OK")){
-//			break;
-//		}
-//	}
-//	printf3("AT+CIPCLOSE\r\n");
-//	while(1){
-//		if(strstr(buf4, "OK")){
-//			break;
-//		}
-//	}
-//   
 }
+
+
 
 
 // 将串口的接收到的信息转发
@@ -93,9 +58,9 @@ void Ttl_to_wifi(void * arg) {
             size2++;
         } else {
             if (size2 > 0) {
-                printf1("TTL %s \r\n", buf2);
-                // printf2("%s", buf2);		//串口接收的信息发送给蓝牙模块
-                printf3("%s", buf2);   //串口接收的信息发送给wifi模块
+                printf1("TTL %s \r\n", buf2); // 向串口打印
+                // printf2("%s", buf2);		// 串口接收的信息发送给蓝牙模块
+                printf3("%s", buf2);   // 串口接收的信息发送给wifi模块
                 memset(buf2, 0, sizeof(buf2));
                 size2 = 0;
             }
@@ -121,11 +86,12 @@ void wifi_to_ttl(void * arg) {
             if (size3 > 0) {
                 // 转发给串口，查看wifi输出的信息
 				printf1("------\r\n", buf3);
-                printf1("%s \r\n", buf3);
+                printf1("wifi	%s \r\n", buf3);
 				printf1("------\r\n", buf3);
-                // 将信息转发给tcp连接任务
+                // 使用消息队列，将信息转发给tcp连接任务
                 xQueueSend(TCP_queue, buf3, 5000);
-                memset(buf3, 0, sizeof(buf3));
+                
+				memset(buf3, 0, sizeof(buf3));
                 size3 = 0;
             }
         }
@@ -135,6 +101,8 @@ void wifi_to_ttl(void * arg) {
 // 将蓝牙接收到的信息转发给串口
 // 当蓝牙收到连接信息时，信息转发给wifi模块，并发给串口
 void Bluetooth_to_ttl(void * arg) {
+
+
     char buf[BUF_SIZE] = {0};
     int size = 0;
     char ch = 0;
@@ -166,6 +134,74 @@ void Bluetooth_to_ttl(void * arg) {
     }
 }
 
+
+// tcp连接任务
+void tcp_connect(void * arg) {
+    char buf4[BUF_SIZE] = {0};
+	while (1) {
+        xQueueReceive(TCP_queue, buf4, 1000);
+        if (strstr(buf4, "AT+CWJAP_DEF=") && strstr(buf4, "OK")) {
+            memset(buf4, 0, sizeof(buf4));
+            break;
+        }
+    }
+	// 向ESP发送AT指令
+	// 连接TCP
+    printf3("AT+CIPSTART=\"TCP\",\"47.115.220.165\",9002\r\n");
+    while (1) {
+        xQueueReceive(TCP_queue, buf4, 1000);
+        if (strstr(buf4, "AT+CIPSTART") && strstr(buf4, "OK")) {
+			memset(buf4, 0, sizeof(buf4));
+            break;
+        }
+    }
+    
+    printf3("AT+CIPMODE=1\r\n");
+    while (1) {
+        xQueueReceive(TCP_queue, buf4, 1000);
+        if (strstr(buf4, "AT+CIPMODE=1") && strstr(buf4, "OK")) {
+			memset(buf4, 0, sizeof(buf4));
+            break;
+        }
+    }
+
+    
+    printf3("AT+CIPSEND\r\n");
+    while (1) {
+        xQueueReceive(TCP_queue, buf4, 1000);
+        if (strstr(buf4, "AT+CIPSEND") && strstr(buf4, "OK")) {
+            memset(buf4, 0, sizeof(buf4));
+            break;
+        }
+    }
+	// 连接完成
+	
+	// 发送数据
+	while(1){
+		getMSG(buf4);
+		printf1("ADC %s \r\n",buf4);
+		printf3("ADC %s",buf4);
+		memset(buf4, 0, sizeof(buf4));
+		break;
+	}
+	
+	Delay_ms(1000);
+	printf3("+++");
+	Delay_ms(1000);
+	
+	printf3("AT+CIPMODE=0\r\n");
+	while(1){
+		xQueueReceive(TCP_queue, buf4, 1000);
+		if(strstr(buf4, "AT+CIPMODE=0") && strstr(buf4, "OK")){
+			memset(buf4, 0, sizeof(buf4));
+			break;
+		}
+	}
+	printf3("AT+CIPCLOSE\r\n");
+	
+	while(1);
+}
+
 // ADC获取数据
 void getMSG(char * buf){
 
@@ -182,27 +218,3 @@ void getMSG(char * buf){
 
 }
 
-int main(void) {
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-    USART1_Init();
-    USART2_Init();
-    USART3_Init();
-    Delay_Init();
-	AD_Init();
-	
-    TTL_queue = xQueueCreate(50, 1);
-    Blue_queue = xQueueCreate(50, 1);
-    ESP_queue = xQueueCreate(50, 1);
-    TCP_queue = xQueueCreate(2, BUF_SIZE);
-
-    xTaskCreate(Bluetooth_to_ttl, "Bluetooth_to_ttl", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
-    xTaskCreate(Ttl_to_wifi, "Ttl_to_wifi", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
-    xTaskCreate(wifi_to_ttl, "wifi_to_ttl", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
-    xTaskCreate(tcp_connect, "tcp_connect", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
-
-    vTaskStartScheduler();
-
-    while (1) {
-
-    }
-}
