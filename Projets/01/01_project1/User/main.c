@@ -5,7 +5,6 @@
 #include "Bluet_to_wifi.h"
 #include "ADC.h"
 
-
 #define BUF_SIZE 150
 
 QueueHandle_t TTL_queue, Blue_queue, ESP_queue, TCP_queue;
