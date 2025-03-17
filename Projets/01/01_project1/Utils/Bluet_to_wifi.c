@@ -55,50 +55,51 @@ int convert_wifi_config(const char* input, char* output, size_t out_len) {
 
 void wifi_to_tcp(const char *buf){
 	// 连接自己的阿里云
-	printf3("AT+CIPSTART=\"TCP\",\"47.97.125.212\",8000\r\n");
+	// printf3("AT+CIPSTART=\"TCP\",\"47.97.125.212\",8000\r\n");
 	
 	// 连接老师的阿里云
-	// printf3("AT+CIPSTART=\"TCP\",\"47.115.220.165\",9002\r\n");
+	printf3("AT+CIPSTART=\"TCP\",\"47.115.220.165\",9002\r\n");
 	
 	while(1){
-		if(strstr(buf, "OK") == NULL){
-			printf1("TCP connect success");
+		if(strstr(buf, "AT+CIPSTART=") && strstr(buf, "OK") ){
+			
+//			printf1("TCP connect success");
+			
 			break;
 		}
 	}
-	
+//	Delay_ms(100);
 	printf3("AT+CIPMODE=1\r\n");
 	while(1){
-		if(strstr(buf, "OK") == NULL){
+		if(strstr(buf, "AT+CIPMODE=1") && strstr(buf, "OK")){
+//			printf1("CIPMODE succ\r\n");
 			break;
 		}
 	}
-	
+//	Delay_ms(100);
 	printf3("AT+CIPSEND\r\n");
 	while(1){
-		if(strstr(buf, "OK") == NULL){
+		if(strstr(buf, "OK")){
+			printf1("succ\r\n");
 			break;
 		}
 	}
-	
+//	printf1("succ\r\n");
 }
 
 void wifi_close_tcp(const char *buf){
 	printf3("+++");
+	
+	printf3("AT+CIPMODE=0\r\n");
 	while(1){
-		if(strstr(buf, "OK") == NULL){
+		
+		if(strstr(buf, "OK")){
 			break;
 		}
 	}
+	printf3("AT+CIPCLOSE\r\n");
 	while(1){
-		printf3("AT+CIPMODE=0\r\n");
-		if(strstr(buf, "OK") == NULL){
-			break;
-		}
-	}
-	while(1){
-		printf3("AT+CIPCLOSE\r\n");
-		if(strstr(buf, "OK") == NULL){
+		if(strstr(buf, "OK")){
 			break;
 		}
 	}

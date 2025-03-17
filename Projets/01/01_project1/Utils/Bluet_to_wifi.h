@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "UART3.h"
-
+#include "UART1.h"
 int convert_wifi_config(const char* input, char* output, size_t out_len);
 void wifi_to_tcp(const char *buf);
 void wifi_close_tcp(const char *buf);
