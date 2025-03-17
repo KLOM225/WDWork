@@ -21,8 +21,8 @@ int main(void) {
     USART2_Init();
     USART3_Init();
     Delay_Init();
-	AD_Init();
-	
+    AD_Init();
+
     TTL_queue = xQueueCreate(50, 1);
     Blue_queue = xQueueCreate(50, 1);
     ESP_queue = xQueueCreate(50, 1);
@@ -77,20 +77,21 @@ void wifi_to_ttl(void * arg) {
     while (1) {
         // 从中断接收信息，存入buf3
         BaseType_t ret3 = xQueueReceive(ESP_queue, &ch3, 5000);
+
         if (ret3 == pdPASS) {
             buf3[size3] = ch3;
             size3++;
-			//printf1(" %c ", ch3);
+            //printf1(" %c ", ch3);
         } else {
             if (size3 > 0) {
                 // 转发给串口，查看wifi输出的信息
-				printf1("------\r\n", buf3);
+                printf1("------\r\n", buf3);
                 printf1("wifi	%s \r\n", buf3);
-				printf1("------\r\n", buf3);
+                printf1("------\r\n", buf3);
                 // 使用消息队列，将信息转发给tcp连接任务
                 xQueueSend(TCP_queue, buf3, 5000);
-                
-				memset(buf3, 0, sizeof(buf3));
+
+                memset(buf3, 0, sizeof(buf3));
                 size3 = 0;
             }
         }
@@ -136,84 +137,97 @@ void Bluetooth_to_ttl(void * arg) {
 
 // tcp连接任务
 void tcp_connect(void * arg) {
-    char buf4[BUF_SIZE] = {0};
-	while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CWJAP_DEF=") && strstr(buf4, "OK")) {
-            memset(buf4, 0, sizeof(buf4));
-            break;
-        }
-    }
-	// 向ESP发送AT指令
-	// 连接TCP
-    printf3("AT+CIPSTART=\"TCP\",\"47.115.220.165\",9002\r\n");
-    while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CIPSTART") && strstr(buf4, "OK")) {
-			memset(buf4, 0, sizeof(buf4));
-            break;
-        }
-    }
-    
-    printf3("AT+CIPMODE=1\r\n");
-    while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CIPMODE=1") && strstr(buf4, "OK")) {
-			memset(buf4, 0, sizeof(buf4));
-            break;
-        }
-    }
 
-    
-    printf3("AT+CIPSEND\r\n");
     while (1) {
-        xQueueReceive(TCP_queue, buf4, 1000);
-        if (strstr(buf4, "AT+CIPSEND") && strstr(buf4, "OK")) {
+		char buf4[BUF_SIZE] = {0};
+        while (1) {
+            xQueueReceive(TCP_queue, buf4, 1000);
+
+            if (strstr(buf4, "AT+CWJAP_DEF=") && strstr(buf4, "OK")) {
+                memset(buf4, 0, sizeof(buf4));
+                break;
+            }
+        }
+
+        // 向ESP发送AT指令
+        // 连接TCP
+        printf3("AT+CIPSTART=\"TCP\",\"47.115.220.165\",9002\r\n");
+
+        while (1) {
+            xQueueReceive(TCP_queue, buf4, 1000);
+
+            if (strstr(buf4, "AT+CIPSTART") && strstr(buf4, "OK")) {
+                memset(buf4, 0, sizeof(buf4));
+                break;
+            }
+        }
+
+        printf3("AT+CIPMODE=1\r\n");
+
+        while (1) {
+            xQueueReceive(TCP_queue, buf4, 1000);
+
+            if (strstr(buf4, "AT+CIPMODE=1") && strstr(buf4, "OK")) {
+                memset(buf4, 0, sizeof(buf4));
+                break;
+            }
+        }
+
+
+        printf3("AT+CIPSEND\r\n");
+
+        while (1) {
+            xQueueReceive(TCP_queue, buf4, 1000);
+
+            if (strstr(buf4, "AT+CIPSEND") && strstr(buf4, "OK")) {
+                memset(buf4, 0, sizeof(buf4));
+                break;
+            }
+        }
+
+        // 连接完成
+
+        // 发送数据
+        while (1) {
+            getMSG(buf4);
+            printf1("ADC %s \r\n", buf4);
+            printf3("ADC %s", buf4);
             memset(buf4, 0, sizeof(buf4));
             break;
         }
+
+        Delay_ms(1000);
+        printf3("+++");
+        Delay_ms(1000);
+
+        printf3("AT+CIPMODE=0\r\n");
+
+        while (1) {
+            xQueueReceive(TCP_queue, buf4, 1000);
+
+            if (strstr(buf4, "AT+CIPMODE=0") && strstr(buf4, "OK")) {
+                memset(buf4, 0, sizeof(buf4));
+                break;
+            }
+        }
+
+        printf3("AT+CIPCLOSE\r\n");
     }
-	// 连接完成
-	
-	// 发送数据
-	while(1){
-		getMSG(buf4);
-		printf1("ADC %s \r\n",buf4);
-		printf3("ADC %s",buf4);
-		memset(buf4, 0, sizeof(buf4));
-		break;
-	}
-	
-	Delay_ms(1000);
-	printf3("+++");
-	Delay_ms(1000);
-	
-	printf3("AT+CIPMODE=0\r\n");
-	while(1){
-		xQueueReceive(TCP_queue, buf4, 1000);
-		if(strstr(buf4, "AT+CIPMODE=0") && strstr(buf4, "OK")){
-			memset(buf4, 0, sizeof(buf4));
-			break;
-		}
-	}
-	printf3("AT+CIPCLOSE\r\n");
-	
-	while(1);
 }
 
 // ADC获取数据
-void getMSG(char * buf){
+void getMSG(char * buf) {
 
-	// 获得红外反射传感器的状态
-//单次启动ADC，转换通道1: PA1
-	uint16_t AD1 = AD_GetValue(ADC_Channel_1);		
+    // 获得红外反射传感器的状态
+    //单次启动ADC，转换通道1: PA1
+    uint16_t AD1 = AD_GetValue(ADC_Channel_1);
 
-	// 获得光敏电阻传感器的状态
-//单次启动ADC，转换通道3
-	uint16_t AD4 = AD_GetValue(ADC_Channel_4);		
+    // 获得光敏电阻传感器的状态
+    //单次启动ADC，转换通道3
+    uint16_t AD4 = AD_GetValue(ADC_Channel_4);
 
-	// 将 AD1 转换为字符串并追加到 buf
-	sprintf(buf, "%s:%u,%s:%u","parameter1:", AD1, "parameter2:", AD4);
+    // 将 AD1 转换为字符串并追加到 buf
+    sprintf(buf, "%s:%u,%s:%u", "parameter1:", AD1, "parameter2:", AD4);
 
 }
 

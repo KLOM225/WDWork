@@ -29,8 +29,8 @@
 
 int main(void){
     //设置IP和端口
-    char *port = "8080";
-    char *ip = "192.168.140.128";
+    char *port = "9002";
+    char *ip = "0.0.0.0";
 
     //设置IPv4sock结构体
     struct sockaddr_in sock;
@@ -64,6 +64,7 @@ int main(void){
             connect_fd = accept(sock_fd, NULL, NULL);
             ERROR_CHECK(connect_fd, -1, "accept");
 
+            printf("fd : %d \n", connect_fd);
             FD_CLR(sock_fd, &next_set);
 
             FD_SET(STDIN_FILENO, &next_set);
