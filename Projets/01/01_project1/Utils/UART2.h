@@ -11,7 +11,7 @@
 #include "Delay.h"
 #include <string.h>
 
-extern QueueHandle_t queue1,queue2,queue3;
+extern QueueHandle_t TTL_queue,Blue_queue,ESP_queue;
 
 void USART2_Init(void);
 void USART2_SendByte(uint8_t Byte);

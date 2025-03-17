@@ -47,7 +47,7 @@ void USART1_IRQHandler(void) {
 //        printf1("****\r\n");
 		
 		BaseType_t stat = pdTRUE;
-		xQueueSendFromISR(queue1, &data, &stat);
+		xQueueSendFromISR(TTL_queue, &data, &stat);
 
 		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
 	}
