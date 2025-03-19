@@ -74,9 +74,15 @@ int main(void){
 
         if(FD_ISSET(connect_fd, &set)){
             char buf[512] = {0};
+            
             ssize_t retrecv = recv(connect_fd, buf, sizeof(buf), 0);
             ERROR_CHECK(retrecv, -1, "recv");
             
+            int file_fd = open("info.txt", O_RDWR | O_CREAT |O_TRUNC);
+            write(file_fd, buf, sizeof(buf));
+            
+
+
             if(retrecv == 0){
                 printf("对方断开连接\n");
 
@@ -86,18 +92,22 @@ int main(void){
                 FD_SET(sock_fd, &next_set);
                 continue;
             }
+    
             printf("------------1------------ \n");
             printf("%s\n", buf);
             printf("------------1------------ \n");
-            
+
+            char file_buf[1024] = { 0 };
+            ssize_t ret = read(file_fd, file_buf, sizeof(file_buf));
             printf("------------2------------ \n");
-            char *str1 = "HTTP/1.1 200 OK\r\n\r\n[\"test1\",\"test2\",\"test3\"]";
+            char response[4096] = { 0 };
+            char *str1 = "HTTP/1.1 200 OK\r\n\r\n";
+            sprintf(response, "%s%ld[\"%s\",\"%s\"]", str1, ret, "\r\n\r\n", file_buf);
+            
             send(connect_fd, str1, strlen(str1), 0);
             printf("%s\n", str1);
             printf("------------2------------ \n");
-
         }
-
     }
     close(sock_fd);
     close(connect_fd);
