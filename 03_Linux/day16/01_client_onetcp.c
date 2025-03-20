@@ -3,8 +3,8 @@
 
 int main(void){
     //设置IP和端口
-    char *port = "8080";
-    char *ip = "192.168.140.128";
+    char *port = "9001:";
+    char *ip = "47.97.125.212";
     
     //设置IPv4sock结构体
     struct sockaddr_in sock;
