@@ -1,0 +1,6 @@
+hello c
+hello c++
+hello java
+hello world
+hello man
+hello phone
