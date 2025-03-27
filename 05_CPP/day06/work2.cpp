@@ -51,10 +51,10 @@ public:
                         _dict[i]._frequency ++;
                         break;
                     }
-                    // 循环结束后，若i等于当前字典大小，说明未找到单词
-                    if(i == _dict.size()){
-                        _dict.push_back({word, 1});
-                    }
+                }
+                // 循环结束后，若i等于当前字典大小，说明未找到单词
+                if(i == _dict.size()){
+                    _dict.push_back({word, 1});
                 }
             }
         }
@@ -62,11 +62,11 @@ public:
     }
     // 
     void store(const string & filename){
-       fstream ofs(filename);
-       for(auto & st : _dict){
+        fstream ofs(filename);
+        for(auto & st : _dict){
             ofs << st._word << " " << st._frequency << endl;
-       }
-       ofs.close(); 
+        }
+        ofs.close(); 
     }
 
 private:
