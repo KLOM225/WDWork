@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "C/C++混合配置",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "D:/Software/Microsoft VS Code/mingw64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compilerArgs": [
+                "-Wall",
+                "-Wextra"
+            ]
+        }
+    ],
+    "version": 4
+}

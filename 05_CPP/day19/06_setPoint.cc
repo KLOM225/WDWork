@@ -24,6 +24,7 @@ private:
 };
 
 
+
 void test(){
     set<Point> spo = {  
         {1, 2},

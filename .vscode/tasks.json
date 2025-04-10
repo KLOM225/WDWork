@@ -1,0 +1,121 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        // ================== C 语言任务 ==================
+        {
+            "label": "C Build (Debug)",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}_c_debug.exe",
+                "-std=c11",
+                "-Wall",
+                "-Wextra"
+            ],
+            "group": "build",
+            "problemMatcher": "$gcc",
+            "detail": "C 调试模式 (C11 标准)"
+        },
+        {
+            "label": "C Build (Release)",
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "${file}",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}_c_release.exe",
+                "-std=c17",
+                "-O3",
+                "-Wall",
+                "-Wextra"
+            ],
+            "group": "build",
+            "problemMatcher": "$gcc",
+            "detail": "C 发布模式 (C17 标准)"
+        },
+        
+        // ================== C++ 语言任务 ==================
+        {
+            "label": "C++ Build (Debug)",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}_cpp_debug.exe",
+                "-std=c++17",
+                "-Wall",
+                "-Wextra",
+                "-lstdc++"
+            ],
+            "group": "build",
+            "problemMatcher": "$gcc",
+            "detail": "C++ 调试模式 (C++17 标准)"
+        },
+        {
+            "label": "C++ Build (Release)",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "${file}",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}_cpp_release.exe",
+                "-std=c++20",
+                "-O3",
+                "-Wall",
+                "-Wextra"
+            ],
+            "group": "build",
+            "detail": "C++ 发布模式 (C++20 标准)"
+        },
+        // ================== 默认任务（建议保留） ==================
+        {
+            "label": "Build Current File",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}.exe",
+                "-std=c++17",
+                "-Wall",
+                "-Wextra"
+            ],
+            "group": "build",
+            "problemMatcher": "$gcc",
+            "detail": "快速编译当前文件（默认 C++17）"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe 生成活动文件",
+            "command": "D:/Software/Microsoft VS Code/mingw64/bin/g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe",
+                "-Wall",
+                "-Wextra"
+            ],
+            "options": {
+                "cwd": "D:/Software/Microsoft VS Code/mingw64/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "调试器生成的任务。"
+        }
+    ]
+}

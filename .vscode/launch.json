@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ------ C 调试配置 ------
+    {
+      "name": "C Debug",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/bin/${fileBasenameNoExtension}_c_debug.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "preLaunchTask": "C Build (Debug)"  // 绑定编译任务
+    },
+
+    // ------ C++ 调试配置 ------
+    {
+      "name": "C++ Debug",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/bin/${fileBasenameNoExtension}_cpp_debug.exe",
+      "args": [],
+      "preLaunchTask": "C++ Build (Debug)"
+    }
+  ]
+}
