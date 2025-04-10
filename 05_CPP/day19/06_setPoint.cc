@@ -16,8 +16,6 @@ public:
     :_x(x), _y(y)
     {}
 
-
-
 private:
     int _x;
     int _y;
