@@ -6,10 +6,8 @@
       "request": "launch",
       "name": "CMake: 外部启动",
       "cmakeDebugType": "external",
-      "pipeName": "<...>"
+      "pipeName": "\\\\.\\pipe\\MyPipe" // 根据实际修改
     },
-    
-    // ------ C 调试配置 ------
     {
       "name": "C Debug",
       "type": "cppdbg",
@@ -21,20 +19,22 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "gdb",
-      "preLaunchTask": "C Build (Debug)"  // 绑定编译任务
+      "miDebuggerPath": "gdb", // Windows 可能需要完整路径如 "C:\\MinGW\\bin\\gdb.exe"
+      "preLaunchTask": "C Build (Debug)"
     },
-
-    // ------ C++ 调试配置 ------
     {
       "name": "C++ Debug",
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/${fileBasenameNoExtension}_cpp_debug.exe",
       "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
       "preLaunchTask": "C++ Build (Debug)"
     }
-    
   ]
-  
 }
