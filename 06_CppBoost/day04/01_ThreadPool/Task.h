@@ -4,7 +4,7 @@
 class Task {
 public: 
     Task();
-    ~Task();
+    virtual ~Task();
 
 virtual void process() = 0;
 

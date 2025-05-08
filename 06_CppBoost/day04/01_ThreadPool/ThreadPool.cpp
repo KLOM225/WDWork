@@ -1,11 +1,11 @@
 #include "ThreadPool.h"
 
 ThreadPool::ThreadPool(size_t threadNum, size_t capa) 
-:_threadNum(threadNum)
-,_threads()
-,_capacity(capa)
-,_taskQue(_capacity)
-,_isExit(false)
+    :_threadNum(threadNum)
+    ,_threads()
+    ,_capacity(capa)
+    ,_taskQue(_capacity)
+     ,_isExit(false)
 {}
 
 ThreadPool::~ThreadPool() {}
@@ -19,18 +19,38 @@ void ThreadPool::start() {
 
 //线程池的停止
 void ThreadPool::stop() {
-    
+    if(!_taskQue.empty()){
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+    _isExit = true;
+    _taskQue.wakeup();
+    for(auto &it : _threads){
+        it.join();
+    }
 }
 
 void ThreadPool::addTask(Task * ptask) {
-    return;
+    if(ptask){
+        _taskQue.push(ptask);
+    }    
 }
 
 Task * ThreadPool::getTask() {
-    return null;
+
+    return _taskQue.pop();    
 }
 
 void ThreadPool::doTask() {
-    return;
+    while(!_isExit){
+        Task * ptask = getTask();
+
+        if(ptask){
+            ptask->process();
+        }
+        else{
+            cout << "ptask == nullptr" << endl;
+        }
+    }
+
 }
 
