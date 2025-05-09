@@ -10,19 +10,23 @@ pthread_mutex_t mutex;
 pthread_cond_t cond;
 
 void *start_routine1(void *arg){
-
+    while(1){
     pthread_mutex_lock(&mutex);
     while(1 == flag ){//将if换成while，是为了防止发生异常唤醒的情况
         pthread_cond_wait(&cond, &mutex);
         
     }
     if(flag == 0){
-    cout << "A" << endl;
-    flag = 1;
+        cout << "A" << endl;
+        flag = 1;
+    pthread_mutex_unlock(&mutex);
+    pthread_cond_signal(&cond);
     }
     if(flag == 2){
-    cout << "C" << endl;
-    flag = 0;
+        cout << "C" << endl;
+        flag = 0;
+        break;
+    }
     }
     pthread_mutex_unlock(&mutex);
     pthread_cond_signal(&cond);
