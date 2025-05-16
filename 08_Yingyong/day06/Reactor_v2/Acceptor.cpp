@@ -4,16 +4,12 @@
 Acceptor::Acceptor(unsigned short port)
 :_addr(port)
 ,_listensock()
-{
-
-
-}
+{}
 
 Acceptor::Acceptor(const string & ip, unsigned short port)
 :_addr(ip, port)
 ,_listensock()
-{
-}
+{}
 
 
 void Acceptor::ready(){
