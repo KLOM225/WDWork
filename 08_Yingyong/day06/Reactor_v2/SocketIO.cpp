@@ -43,6 +43,7 @@ int SocketIO::readline(char * buff, int maxlen){
         for(int idx = 0; idx != ret; ++idx){
             if(p[idx] == '\n'){
                 int sz = idx + 1;
+                readn(p, sz);
                 total += sz;
                 p += sz;
                 *p = '\0';
