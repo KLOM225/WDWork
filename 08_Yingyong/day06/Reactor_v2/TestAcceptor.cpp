@@ -34,6 +34,7 @@ int main(void)
 	acceptor.ready();
     EventLoop loop(acceptor);
     loop.setAllCallbacks(onConnection, onMessage, onClose);
+    cout << "connecting"<< endl;
     loop.loop();
 	return 0;
 }
