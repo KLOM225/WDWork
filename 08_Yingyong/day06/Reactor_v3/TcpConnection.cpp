@@ -23,7 +23,7 @@ TcpConnection::~TcpConnection(){
 }
 
 
-string TcpConnection::recvive(){
+string TcpConnection::receive(){
     char buff[65535] = {0};
     _socketIo.readline(buff, sizeof(buff));
     return string(buff);

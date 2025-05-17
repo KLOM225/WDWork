@@ -24,7 +24,7 @@ public:
     TcpConnection(int fd);
     ~TcpConnection();
 
-    string recvive();
+    string receive();
     void send(const string &msg);
 
     string toString() const;
