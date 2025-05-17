@@ -8,11 +8,9 @@
 #include <iostream>
 #include <queue>
 
-namespace wd
-{
 
 //设置一个元素类型
-using ElemType=wd::Task;
+using ElemType=Task;
 
 class TaskQueue
 {
@@ -38,7 +36,6 @@ private:
 
 };
 
-}//end of namespace wd
 
 
 #endif

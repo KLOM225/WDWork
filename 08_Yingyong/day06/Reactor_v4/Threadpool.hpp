@@ -9,8 +9,6 @@
 using std::vector;
 using std::unique_ptr;
 
-namespace wd
-{
 
 class Threadpool
 {
@@ -31,7 +29,6 @@ private:
     TaskQueue _taskque;
 };
 
-}//end of namespace wd
 
 
 #endif

@@ -5,8 +5,6 @@
 #include <pthread.h>
 //#include "MutexLock.hpp"  //该头文件可以放到实现文件中去, 不需要放在这里
 
-namespace wd
-{
 
 class MutexLock;//类的前向声明， 减少头文件的依赖
 class Condition : Noncopyable
@@ -24,7 +22,6 @@ private:
     MutexLock & _mutex;
 };
 
-}//end of namespace wd
 
 
 #endif

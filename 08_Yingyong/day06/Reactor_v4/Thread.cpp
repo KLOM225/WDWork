@@ -9,8 +9,6 @@
 //#include <log4cpp/Category.hh>  //4. 第三方库头文件
 
 
-namespace wd
-{
 
 Thread::Thread(ThreadCallback && cb)
 : _pthid(0)
@@ -54,5 +52,4 @@ void Thread::join()
 }
 
 
-}//end of namespace wd
 

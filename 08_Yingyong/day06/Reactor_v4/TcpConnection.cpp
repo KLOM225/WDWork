@@ -1,5 +1,6 @@
 #include "TcpConnection.hpp"
 #include "InetAddress.hpp"
+#include "EventLoop.hpp"
 
 #include <errno.h>
 #include <stdlib.h>
@@ -32,6 +33,14 @@ string TcpConnection::receive(){
 void TcpConnection::send(const string &msg){
     _socketIo.writen(msg.c_str(), msg.size()); 
 }
+
+void TcpConnection::sendInLoop(const string & msg)
+{
+    if(_ploop) {
+        _ploop->runInLoop(std::bind(&TcpConnection::send, this, msg));
+    }
+}
+
 
 void TcpConnection::shutdown(){
     if(!_isShutdownWrite){

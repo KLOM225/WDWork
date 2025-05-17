@@ -1,17 +1,28 @@
 #include "EventLoop.hpp"
 #include "Acceptor.hpp"
 #include "TcpConnection.hpp"
+#include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/eventfd.h>
+
+
 
 EventLoop::EventLoop(Acceptor & a)
 :_epfd(createEpollFd())
-,_acceptor(a)
+,_eventfd(createEventFd())
 ,_isLooping(false)
+,_acceptor(a)
 ,_eventArr(100)
 {
     addEpollReadEvent(_acceptor.fd());
+    addEpollReadEvent(_eventfd);
+}
+
+EventLoop::~EventLoop(){
+    close(_epfd);
+    close(_eventfd);
 }
 
 void EventLoop::loop(){
@@ -19,6 +30,14 @@ void EventLoop::loop(){
     while(_isLooping){
         waitEpollFd();
     }
+}
+
+void EventLoop::runInLoop(Functor && cb){
+    _mutex.lock();
+    _pendingFunctors.push_back(cb);
+    _mutex.unlock();
+    
+    wakeup();
 }
 
 void EventLoop::waitEpollFd(){
@@ -35,6 +54,9 @@ void EventLoop::waitEpollFd(){
             int fd = _eventArr[i].data.fd;
             if(fd == _acceptor.fd()){
                 handleNewConnection();
+            }else if(fd == _eventfd){
+                handleRead();
+                doPendingFunctors();
             }else{
                 handleMessage(fd);
             }
@@ -65,6 +87,20 @@ void EventLoop::handleMessage(int fd){
     }
 }
 
+void EventLoop::doPendingFunctors()
+{
+    printf("doPendingFunctors()\n");
+    vector<Functor> tmp;
+    _mutex.lock();
+    tmp.swap(_pendingFunctors);//时间复杂度为O(1)
+    _mutex.unlock();
+
+    for(auto & f : tmp) {
+        f();
+    }
+}
+
+
 int EventLoop::createEpollFd(){
     int fd = epoll_create1(0);
     if(fd < 0){
@@ -93,5 +129,35 @@ void EventLoop::delEpollReadEvent(int fd)
     if(ret < 0) {
         perror("epoll_ctl");
     }
+}
+
+
+void EventLoop::handleRead()
+{
+    uint64_t howmany = 0;
+    int ret = read(_eventfd, &howmany, sizeof(howmany));
+    if(ret != sizeof(howmany)) {
+        perror("read");
+    }
+}
+
+void EventLoop::wakeup()//用来做通知操作
+{
+    //只要往内核计数器上加1，就能改变其值，从而达到通知的效果
+    uint64_t one = 1;
+    int ret = write(_eventfd, &one, sizeof(one));
+    if(ret != sizeof(one)) {
+        perror("write");
+    }
+}
+
+
+int EventLoop::createEventFd()
+{
+    int fd = eventfd(0, 0);
+    if(fd < 0) {
+        perror("eventfd");
+    }
+    return fd;
 }
 

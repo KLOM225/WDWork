@@ -3,8 +3,6 @@
 
 #include <iostream>
 
-namespace wd
-{
 
 
 TaskQueue::TaskQueue(size_t sz)
@@ -69,4 +67,3 @@ void TaskQueue::wakeup()
     _notEmpty.notifyAll();
 }
 
-}//end of namespace wd

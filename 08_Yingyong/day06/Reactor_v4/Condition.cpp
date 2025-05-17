@@ -4,9 +4,6 @@
 #include <pthread.h>
 
 
-namespace wd
-{
-
 Condition::Condition(MutexLock & m)
 : _mutex(m)
 {
@@ -32,4 +29,3 @@ void Condition::notifyAll()
 {
     pthread_cond_broadcast(&_cond);
 }
-}//end of namespace wd

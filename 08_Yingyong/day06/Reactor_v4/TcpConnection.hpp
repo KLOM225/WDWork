@@ -12,6 +12,9 @@
 using std::string;
 using std::shared_ptr;
 
+class EventLoop;
+
+
 class TcpConnection;
 using TcpConnectionPtr = shared_ptr<TcpConnection>;
 using TcpConnectionCallback = std::function<void(TcpConnectionPtr)>;
@@ -26,6 +29,7 @@ public:
 
     string receive();
     void send(const string &msg);
+    void sendInLoop(const string & msg);
 
     string toString() const;
     void shutdown();
@@ -53,6 +57,7 @@ private:
     InetAddress _localAddr;
     InetAddress _peerAddr;
     bool _isShutdownWrite;
+    EventLoop * _ploop;
 
     TcpConnectionCallback _onConnection;
     TcpConnectionCallback _onMessage;

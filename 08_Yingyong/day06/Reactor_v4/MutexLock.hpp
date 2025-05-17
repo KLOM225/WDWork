@@ -4,8 +4,6 @@
 
 #include <pthread.h>
 
-namespace wd
-{
 
 class MutexLock : Noncopyable
 {
@@ -40,7 +38,6 @@ private:
     MutexLock & _mutex;
 };
 
-}//end of namespace wd
 
 
 #endif
