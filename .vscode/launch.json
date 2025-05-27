@@ -6,7 +6,7 @@
       "request": "launch",
       "name": "CMake: 外部启动",
       "cmakeDebugType": "external",
-      "pipeName": "\\\\.\\pipe\\MyPipe" // 根据实际修改
+      "pipeName": "\\\\.\\pipe\\MyPipe"
     },
     {
       "name": "C Debug",
@@ -19,7 +19,7 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "gdb", // Windows 可能需要完整路径如 "C:\\MinGW\\bin\\gdb.exe"
+      "miDebuggerPath": "gdb",
       "preLaunchTask": "C Build (Debug)"
     },
     {
@@ -35,6 +35,25 @@
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "preLaunchTask": "C++ Build (Debug)"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "d:/Users/MyDocuments/WD/WDTask/08_Yingyong/day17",
+      "program": "d:/Users/MyDocuments/WD/WDTask/08_Yingyong/day17/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }
