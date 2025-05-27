@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONFIGURATION_HPP
+#define CONFIGURATION_HPP
 
 #include <fstream>
 #include <string>
@@ -9,18 +10,11 @@
 // 创建类Configuration，通过它读取服务器程序的输入信息
 // 读取配置文件的代码，从../SmartHomeMonitorServer/conf/server.conf
 // 辅助函数：去除字符串前后空格
-void trim(std::string &s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
-        return !std::isspace(ch);
-    }));
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
-        return !std::isspace(ch);
-    }).base(), s.end());
-}
+
 
 class Configuration {
 public:
-    explicit Configuration();
+    explicit Configuration(const std::string& config_file_path = "conf/server.conf");
 
     // 获取配置参数
     std::string GetIP() const { return ip_; }
@@ -40,4 +34,8 @@ private:
 
     void ParseLine(const std::string &line);
     void Validate() const;
+    static void trim(std::string& s);
 };
+
+
+#endif // CONFIGURATION_HPP

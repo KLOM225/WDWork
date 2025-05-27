@@ -1,12 +1,15 @@
 #include "Configuration.hpp"
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <algorithm>
 
-
-Configuration::Configuration() {
+Configuration::Configuration(const std::string& config_file_path) {
     // 读取配置文件的代码，从../conf/server.conf
-    // 读取服务器的IP地址、端口号、数据库连接信息等   
-    std::ifstream file("../conf/server.conf");
+    // 读取服务器的IP地址、端口号、数据库连接信息等
+    std::ifstream file(config_file_path);
     if (!file.is_open()) {
-        throw std::runtime_error("无法打开配置文件: ");
+        throw std::runtime_error("无法打开配置文件: " + config_file_path);
     }
 
     std::string line;
@@ -67,4 +70,13 @@ void Configuration::Validate() const {
     if (task_num_ == 0) throw std::runtime_error("配置缺少任务数");
     if (video_path_.empty()) throw std::runtime_error("配置缺少视频路径");
     if (log_file_.empty()) throw std::runtime_error("配置缺少日志文件路径");
+}
+
+void Configuration::trim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+        return !std::isspace(ch);
+    }));
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
 }
