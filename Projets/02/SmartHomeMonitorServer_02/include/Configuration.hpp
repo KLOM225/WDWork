@@ -51,3 +51,34 @@ private:
 
 
 #endif // CONFIGURATION_HPP
+
+// class Configuration {
+// private:
+//     std::map<std::string, std::string> configMap;
+//     Configuration() {}
+
+// public:
+//     static Configuration& getInstance() {
+//         static Configuration instance;
+//         return instance;
+//     }
+
+//     bool load(const std::string& filepath) {
+//         std::ifstream infile(filepath);
+//         if (!infile.is_open()) return false;
+//         std::string key, value;
+//         while (infile >> key >> value) {
+//             configMap[key] = value;
+//         }
+//         return true;
+//     }
+
+//     std::string get(const std::string& key) const {
+//         auto it = configMap.find(key);
+//         return it != configMap.end() ? it->second : "";
+//     }
+
+//     int getInt(const std::string& key) const {
+//         return std::stoi(get(key));
+//     }
+// };
