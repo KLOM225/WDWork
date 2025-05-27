@@ -1,7 +1,8 @@
-#include <my_header.hpp>
+#include <iostream>
+#include <string>
 
 void test(){
-    cout << "hello" << endl;
+    std::cout << "hello" << std::endl;
 }
 
 int main(){
