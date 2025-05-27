@@ -1,5 +1,7 @@
 #include "../include/TLV.hpp"
 #include <arpa/inet.h>  // 字节序转换
+#include <cstring>
+
 
 //------------------ TLV编码 --------------------
 std::vector<uint8_t> TLV::serialize() const {

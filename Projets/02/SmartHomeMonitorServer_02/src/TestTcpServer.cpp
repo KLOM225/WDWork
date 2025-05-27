@@ -103,7 +103,7 @@ private:
 int main(void)
 {
     Configuration& config = Configuration::getInstance();
-    EchoServer server(config.GetTaskNum(), config.GetThreadNum(), config.GetPort());
+    EchoServer server(config.GetThreadNum(),config.GetThreadNum(), config.GetPort());
     server.start();
 
 	return 0;
