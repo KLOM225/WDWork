@@ -110,13 +110,13 @@ void receiveData(int cfd)
     if (ret == -1)
     {
         perror("recv");
-        break;
+        return;
     }
     else if (ret == 0)
     {
         cout << "Server closed the connection.\n";
         close(cfd);
-        break;
+        return;
     }
     buffer[ret] = '\0'; // 确保字符串以'\0'结尾
     cout << "Received " << ret << " bytes: " << buffer << endl;
