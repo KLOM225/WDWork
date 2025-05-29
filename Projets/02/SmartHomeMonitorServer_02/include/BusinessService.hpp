@@ -4,6 +4,7 @@
 #include "TLV.hpp"
 #include "TcpConnection.hpp"
 #include "MySql.hpp"
+#include <memory>
 
 class UserLoginSection1
 {
@@ -24,7 +25,7 @@ private:
 private:
     TcpConnectionPtr _conn;
     Packet _packet;
-    MySql _mysql; // MySQL数据库操作对象
+    shared_ptr<MySql> _mysql;
 };
 
 class UserLoginSection2
@@ -43,7 +44,7 @@ public:
 private:
     TcpConnectionPtr _conn;
     Packet _packet;
-    MySql _mysql; // MySQL数据库操作对象
+    shared_ptr<MySql> _mysql; // MySQL数据库操作对象
 };
 
 #endif //__BUSINESSSERVICE_HPP__

@@ -16,7 +16,8 @@ void connectToServer(int &cfd, const char *ip, int port)
 {
     // 创建套接字
     cfd = socket(AF_INET, SOCK_STREAM, 0);
-    if(cfd == -1) {
+    if (cfd == -1)
+    {
         perror("socket");
         return;
     }
@@ -30,7 +31,8 @@ void connectToServer(int &cfd, const char *ip, int port)
 
     // 连接服务器
     int ret = connect(cfd, (const struct sockaddr *)&serveraddr, sizeof(serveraddr));
-    if(ret == -1) {
+    if (ret == -1)
+    {
         perror("connect");
         return;
     }
@@ -102,26 +104,24 @@ void sendData(int cfd)
 void receiveData(int cfd)
 {
     char buffer[1024];
-    while (true)
+
+    memset(buffer, 0, sizeof(buffer));
+    int ret = recv(cfd, buffer, sizeof(buffer) - 1, 0);
+    if (ret == -1)
     {
-        memset(buffer, 0, sizeof(buffer));
-        int ret = recv(cfd, buffer, sizeof(buffer) - 1, 0);
-        if (ret == -1)
-        {
-            perror("recv");
-            break;
-        }
-        else if (ret == 0)
-        {
-            cout << "Server closed the connection.\n";
-            close(cfd);
-            break;
-        }
-        buffer[ret] = '\0'; // 确保字符串以'\0'结尾
-        cout << "Received " << ret << " bytes: " << buffer << endl;
-        TLV *tlv = reinterpret_cast<TLV *>(buffer); 
-        cout << "Type: " << tlv->type << ", Length: " << tlv->length << ", Data: " << tlv->data << endl;
+        perror("recv");
+        break;
     }
+    else if (ret == 0)
+    {
+        cout << "Server closed the connection.\n";
+        close(cfd);
+        break;
+    }
+    buffer[ret] = '\0'; // 确保字符串以'\0'结尾
+    cout << "Received " << ret << " bytes: " << buffer << endl;
+    TLV *tlv = reinterpret_cast<TLV *>(buffer);
+    cout << "Type: " << tlv->type << ", Length: " << tlv->length << ", Data: " << tlv->data << endl;
 }
 
 int main()
@@ -131,7 +131,7 @@ int main()
     int serverPort = 8100;
 
     connectToServer(cfd, serverIP, serverPort);
-    
+
     fd_set set;
     while (1)
     {
