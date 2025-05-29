@@ -34,6 +34,7 @@ public:
         if (_conn)
         {
             mysql_close(_conn);
+            _conn = nullptr;
         }
     }
 

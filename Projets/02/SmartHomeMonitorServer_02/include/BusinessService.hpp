@@ -12,7 +12,7 @@ public:
     UserLoginSection1(TcpConnectionPtr conn, const Packet & p)
     : _conn(conn)
     , _packet(p)
-    , _mysql()
+    , _mysql(make_shared<MySql>())
     {}
 
     //业务逻辑的处理
