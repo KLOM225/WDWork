@@ -20,7 +20,6 @@ void UserLoginSection1::process()
         // 消息内容为用户名
         string username = _packet.msg;
         
-        
         // 检查用户是否存在
         //if (_mysql.user_exists(username.c_str()))
         if (_mysql->user_exists(username.c_str()))
@@ -94,6 +93,7 @@ void UserLoginSection1::getSetting(string &s, const char *passwd)
     strncpy(buff, passwd, i);
     // 拷贝到s中
     s.assign(buff, i);
+    cout << s << endl;
 }
 
 void UserLoginSection2::process()

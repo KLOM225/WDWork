@@ -81,33 +81,6 @@ public:
             fprintf(stderr, "Result error: %s\n", mysql_error(_conn));
             return -1;
         }
-        else
-        {
-            // row的值为一个大于0的值, 说明已经有数据了
-            int row = mysql_num_rows(result);
-            int col = mysql_num_fields(result);
-            printf("result (%d row, %d col)\n\n", row, col);
-
-            // 打印字段名
-            MYSQL_FIELD *filed = NULL;
-            while ((filed = mysql_fetch_field(result)) != NULL)
-            {
-                printf("%s\t", filed->name);
-            }
-            printf("\n");
-
-            // 打印每一行数据
-            MYSQL_ROW strRow;
-            while ((strRow = mysql_fetch_row(result)) != NULL)
-            {
-                // strRow是一个字符串数组
-                for (int i = 0; i < col; ++i)
-                {
-                    printf("%s\t", strRow[i]);
-                }
-                printf("\n");
-            }
-        }
 
         // 从结果集中提取第一行数据
         MYSQL_ROW row = mysql_fetch_row(result);
@@ -120,7 +93,16 @@ public:
             count = atoi(row[0]);
         }
         // 如果row为NULL，count保持0（用户不存在）
-
+        
+        // 调试信息（可选）
+        if (count > 0)
+        {
+            LogDebug("User '%s' exists in database", username);
+        }
+        else
+        {
+            LogDebug("User '%s' not found in database", username);
+        }
         // 释放结果集占用的内存
         mysql_free_result(result);
 
@@ -144,6 +126,12 @@ public:
 
         if (mysql_query(_conn, query))
         {
+            // 检查是否为重复键错误
+            if (mysql_errno(_conn) == 1062)
+            { // ER_DUP_ENTRY
+                LogWarn("Duplicate user: %s", username.c_str());
+                return true; // 或根据业务逻辑返回false
+            }
             LogError("INSERT error: %s", mysql_error(_conn));
             return false;
         }

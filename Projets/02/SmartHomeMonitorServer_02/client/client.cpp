@@ -4,12 +4,15 @@
 #include <arpa/inet.h>
 using namespace std;
 
+
 typedef struct
 {
     int type;
     int length;
     char data[1000];
 } TLV;
+
+
 
 // 连接服务器
 void connectToServer(int &cfd, const char *ip, int port)
@@ -42,7 +45,7 @@ void connectToServer(int &cfd, const char *ip, int port)
 // 发送数据
 void sendData(int cfd)
 {
-    cout << ">> Input (1 to send username, 2 to send username and password, 3 to send a message, q to quit): ";
+    
     string input;
     getline(cin, input);
 
@@ -65,7 +68,7 @@ void sendData(int cfd)
         strcpy(tlv.data, username.c_str());
         tlv.length = strlen(tlv.data);
     }
-    else if (input == "2")
+    else if (input == "4")
     {
         cout << ">> Input password: ";
         string password;
@@ -75,7 +78,7 @@ void sendData(int cfd)
         strcpy(tlv.data, password.c_str());
         tlv.length = strlen(tlv.data);
     }
-    else if (input == "3")
+    else if (input == "7")
     {
         cout << ">> Input message: ";
         string message;
@@ -135,11 +138,14 @@ int main()
     fd_set set;
     while (1)
     {
+        
         FD_ZERO(&set);
-        FD_SET(STDIN_FILENO, &set);
+        FD_SET(STDIN_FILENO, &set)
         FD_SET(cfd, &set);
 
         int ret = select(cfd + 1, &set, NULL, NULL, NULL);
+
+        cout << ">> Input (1 to send username, 2 to send username and password, 3 to send a message, q to quit): " << endl;
         if (ret == -1)
         {
             perror("select");
