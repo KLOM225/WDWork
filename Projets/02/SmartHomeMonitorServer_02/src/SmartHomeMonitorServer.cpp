@@ -11,7 +11,7 @@ using std::endl;
 
 
 
-SmartHomeMonitorServer::SmartHomeMonitorServer(int num, int quesize, unsigned short port, const string & ip = "0.0.0.0")
+SmartHomeMonitorServer::SmartHomeMonitorServer(int num, int quesize, unsigned short port, const string & ip)
 : _threadpool(num, quesize)
 , _server(port, ip)
 {
