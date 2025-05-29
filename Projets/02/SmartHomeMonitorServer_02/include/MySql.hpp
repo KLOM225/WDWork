@@ -138,6 +138,35 @@ public:
         return true;
     }
 
+
+    std::string get_setting(const std::string& username) {
+        char query[256];
+        snprintf(query, sizeof(query),
+                 "SELECT setting FROM users WHERE name = '%s'",
+                 escape_string(username).c_str());
+
+        if (mysql_query(_conn, query)) {
+            LogError("SELECT setting error: %s", mysql_error(_conn));
+            return "";
+        }
+
+        MYSQL_RES* result = mysql_store_result(_conn);
+        if (!result) {
+            LogError("Result error for setting: %s", mysql_error(_conn));
+            return "";
+        }
+
+        MYSQL_ROW row = mysql_fetch_row(result);
+        std::string setting;
+        
+        if (row && row[0]) {
+            setting = row[0];
+        }
+
+        mysql_free_result(result);
+        return setting;
+    }
+    
 private:
     // SQL注入防护：转义特殊字符
     std::string escape_string(const std::string &input)
