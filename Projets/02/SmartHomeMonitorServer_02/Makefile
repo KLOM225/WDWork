@@ -1,8 +1,7 @@
 # 编译器和编译选项
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude  -llog4cpp -lcrypt
-LDFLAGS := 
-LIBS:= 
+CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude
+LDFLAGS := -llog4cpp -lpthread  # 添加log4cpp链接
 
 # 目标可执行文件名
 TARGET := server
@@ -28,7 +27,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	@echo "Linking $@..."
 	@$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
-	@echo "Build successful!"
+	@echo "Build successful! Linked with log4cpp"
 
 # 编译规则：生成对象文件和依赖文件
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR) $(DEPS_DIR)
