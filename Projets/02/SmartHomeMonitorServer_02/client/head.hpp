@@ -1,5 +1,5 @@
-#ifndef __WD_HEAD_H__
-#define __WD_HEAD_H__
+#ifndef __HEAD_HPP__
+#define __HEAD_HPP__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +43,6 @@ typedef void (*sighandler_t)(int);
     }}
 
 
-#endif
+#endif 
 
 
