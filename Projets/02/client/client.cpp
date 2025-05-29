@@ -18,8 +18,8 @@ int main()
     struct sockaddr_in serveraddr;
     memset(&serveraddr, 0, sizeof(serveraddr));
     serveraddr.sin_family = AF_INET;
-    serveraddr.sin_port = htons(8000);
-    serveraddr.sin_addr.s_addr = inet_addr("192.168.30.129");
+    serveraddr.sin_port = htons(8100);
+    serveraddr.sin_addr.s_addr = inet_addr("192.168.42.128");
     int ret = connect(cfd, 
                       (const struct sockaddr *)&serveraddr,
                       sizeof(serveraddr));
