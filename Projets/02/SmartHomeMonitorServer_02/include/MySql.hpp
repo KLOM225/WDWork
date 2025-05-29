@@ -47,7 +47,7 @@ public:
             // 连接失败处理
             fprintf(stderr, "Connection error: %s\n", mysql_error(conn));
             mysql_close(conn); // 关闭连接对象
-            return EXIT_FAILURE;
+            return ;
         }
         return;
     }
@@ -57,13 +57,7 @@ public:
     {
         char query[256]; // 存储SQL查询语句的缓冲区
 
-        const char *sql = "select * from student";
-        int ret = mysql_real_query(pconn, sql, strlen(sql));
-        if (ret != 0)
-        {
-            printf("(%d, %s)\n", mysql_errno(pconn), mysql_error(pconn));
-            return EXIT_FAILURE;
-        }
+       
         // 构造SQL查询语句：统计指定用户名的记录数量
         // 注意：实际应用中应使用预处理语句防止SQL注入
         snprintf(query, sizeof(query),
@@ -120,8 +114,8 @@ public:
                 escape_string(setting).c_str(),
                 escape_string(encrypt).c_str());
         
-        if (mysql_query(connection, query)) {
-            LogError("INSERT error: %s", mysql_error(connection));
+        if (mysql_query(conn, query)) {
+            LogError("INSERT error: %s", mysql_error(conn));
             return false;
         }
         return true;
@@ -131,7 +125,7 @@ private:
     // SQL注入防护：转义特殊字符
     std::string escape_string(const std::string& input) {
         char* escaped = new char[input.length() * 2 + 1];
-        mysql_real_escape_string(connection, escaped, input.c_str(), input.length());
+        mysql_real_escape_string(conn, escaped, input.c_str(), input.length());
         std::string result(escaped);
         delete[] escaped;
         return result;
