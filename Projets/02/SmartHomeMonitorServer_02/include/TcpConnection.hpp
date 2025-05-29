@@ -28,7 +28,7 @@ public:
 	~TcpConnection();
 
 	string receive();
-    int TcpConnection::readPacket(Packet & packet);
+    int readPacket(Packet & packet);
 
 	void send(const string & msg);
     void sendInLoop(const string & msg);
