@@ -1,7 +1,6 @@
 #include "BusinessService.hpp"
 #include "Mylogger.hpp"
 
-
 #include <shadow.h>
 #include <string.h>
 
@@ -19,27 +18,30 @@ void UserLoginSection1::process()
     {
         // 消息内容为用户名
         string username = _packet.msg;
-        
+
         // 检查用户是否存在
-        //if (_mysql.user_exists(username.c_str()))
+        // if (_mysql.user_exists(username.c_str()))
         if (_mysql->user_exists(username.c_str()))
         {
-            // 用户存在：生成随机字符串作为盐值
-            char *sp = GenRandomString(username.length());
+            // +++ 修改点1: 从数据库获取现有用户的盐值 +++
+            string setting = _mysql->get_setting(username);
 
-            // 获取要发送给对端的setting（盐值）
-            string setting;
-            getSetting(setting, sp);
-            free(sp); // 释放动态分配的内存
-            // 打印调试信息
-            LogDebug("Existing user setting: %s\n", setting.c_str());
+            if (!setting.empty())
+            {
+                LogDebug("Existing user setting: %s\n", setting.c_str());
 
-            // 构造TLV，发送给对端（成功）
-            TLV tlv;
-            tlv.type = TASK_TYPE_LOGIN_SECTION1_RESP_OK;
-            tlv.length = setting.length();
-            strncpy(tlv.data, setting.c_str(), tlv.length);
-            _conn->sendInLoop(tlv);
+                // 构造TLV，发送给对端（成功）
+                TLV tlv;
+                tlv.type = TASK_TYPE_LOGIN_SECTION1_RESP_OK;
+                tlv.length = setting.length();
+                strncpy(tlv.data, setting.c_str(), tlv.length);
+                _conn->sendInLoop(tlv);
+            }
+            else
+            {
+                // 获取盐值失败处理
+                LogError("Failed to get setting for user: %s", username.c_str());
+            }
         }
         else
         {
@@ -103,8 +105,6 @@ void UserLoginSection2::process()
     if (_packet.type == TASK_TYPE_LOGIN_SECTION2)
     {
     }
-
-
 }
 
 char *UserLoginSection1::GenRandomString(int length)
