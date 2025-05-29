@@ -19,6 +19,7 @@ void UserLoginSection1::process()
     {
         // 消息内容为用户名
         string username = _packet.msg;
+        _mysql.connect(); // 确保数据库连接已建立
         
         // 检查用户是否存在
         if (_mysql.user_exists(username.c_str()))
