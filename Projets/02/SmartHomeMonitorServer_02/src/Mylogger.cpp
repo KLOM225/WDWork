@@ -30,7 +30,7 @@ Mylogger::Mylogger()
     auto pOsAppender = new OstreamAppender("console", &cout);
     pOsAppender->setLayout(ptn1);
     //从配置文件中获取日志存放路径
-    string logfile = wd::Configuration::getInstance()->getConfigMap()["log_file"];
+    string logfile = Configuration::getInstance()->getConfigMap()["log_file"];
     cout << "set log file:" << logfile << endl;
     auto pFileAppender = new FileAppender("fileAppender", logfile);
     pFileAppender->setLayout(ptn2);
