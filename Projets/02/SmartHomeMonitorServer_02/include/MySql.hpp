@@ -80,20 +80,20 @@ public:
             return -1;
         }else{
                //row的值为一个大于0的值, 说明已经有数据了
-        int row = mysql_num_rows(res);
-        int col = mysql_num_fields(res);
+        int row = mysql_num_rows(result);
+        int col = mysql_num_fields(result);
         printf("result (%d row, %d col)\n\n", row, col);
 
         //打印字段名
         MYSQL_FIELD  *filed = NULL;
-        while((filed = mysql_fetch_field(res)) != NULL) {
+        while((filed = mysql_fetch_field(result)) != NULL) {
             printf("%s\t", filed->name);
         }
         printf("\n");
         
         //打印每一行数据
         MYSQL_ROW strRow;
-        while((strRow = mysql_fetch_row(res))!= NULL)  {
+        while((strRow = mysql_fetch_row(result))!= NULL)  {
             //strRow是一个字符串数组
             for(int i = 0; i < col; ++i) {
                 printf("%s\t", strRow[i]);
