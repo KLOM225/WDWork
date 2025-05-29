@@ -16,8 +16,8 @@ class MySql
 {
 public:
     MySql()
-    :conn(NULL)
     {
+        conn = mysql_init(NULL);
         // 初始化MySQL连接
         if (!conn)
         {

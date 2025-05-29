@@ -1,7 +1,7 @@
 # 编译器和编译选项
 CXX := g++
 CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude
-LDFLAGS := -llog4cpp -lpthread  # 添加log4cpp链接
+LDFLAGS := -llog4cpp -lpthread -lmysqlclient
 
 # 目标可执行文件名
 TARGET := server
