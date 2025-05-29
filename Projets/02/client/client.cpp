@@ -5,7 +5,7 @@ using namespace std;
 typedef struct {
     int type;
     int length;
-    char value[1000];   // 变长数据
+    char data[1000];   // 变长数据
 } TLV;
 
 int main()
