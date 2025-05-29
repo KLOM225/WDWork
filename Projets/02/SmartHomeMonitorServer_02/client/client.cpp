@@ -42,62 +42,62 @@ void connectToServer(int &cfd, const char *ip, int port)
 // 发送数据
 void sendData(int cfd)
 {
-    while (true)
+    cout << ">> Input (1 to send username, 2 to send username and password, 3 to send a message, q to quit): ";
+    string input;
+    getline(cin, input);
+
+    if (input == "q")
     {
-        cout << ">> Input (1 to send username, 2 to send username and password, 3 to send a message, q to quit): ";
-        string input;
-        getline(cin, input);
-
-        if (input == "q")
-        {
-            cout << "Exiting...\n";
-            break;
-        }
-
-        TLV tlv;
-        memset(&tlv, 0, sizeof(tlv));
-
-        if (input == "1")
-        {
-            cout << ">> Input username: ";
-            string username;
-            getline(cin, username);
-            tlv.type = 1;
-            strcpy(tlv.data, ("type=1, username=" + username).c_str());
-            tlv.length = strlen(tlv.data);
-        }
-        else if (input == "2")
-        {
-            cout << ">> Input password: ";
-            string password;
-            getline(cin, password);
-            tlv.type = 2;
-            strcpy(tlv.data, ("type=2, password=" + password).c_str());
-            tlv.length = strlen(tlv.data);
-        }
-        else if (input == "3")
-        {
-            cout << ">> Input message: ";
-            string message;
-            getline(cin, message);
-            tlv.type = 3;
-            strcpy(tlv.data, ("type=3, message=" + message).c_str());
-            tlv.length = strlen(tlv.data);
-        }
-        else
-        {
-            cout << "Invalid input. Try again.\n";
-            continue;
-        }
-
-        int ret = send(cfd, &tlv, 8 + tlv.length, 0);
-        if (ret == -1)
-        {
-            perror("send");
-            break;
-        }
-        cout << "Sent " << ret << " bytes: " << tlv.data << endl;
+        cout << "Exiting...\n";
+        return;
     }
+
+    TLV tlv;
+    memset(&tlv, 0, sizeof(tlv));
+
+    if (input == "1")
+    {
+        cout << ">> Input username: ";
+        string username;
+        getline(cin, username);
+        tlv.type = 1;
+        cout << "type=1, username=" + username << endl;
+        strcpy(tlv.data, username.c_str());
+        tlv.length = strlen(tlv.data);
+    }
+    else if (input == "2")
+    {
+        cout << ">> Input password: ";
+        string password;
+        getline(cin, password);
+        tlv.type = 2;
+        cout << "type=2, password=" + password << endl;
+        strcpy(tlv.data, password.c_str());
+        tlv.length = strlen(tlv.data);
+    }
+    else if (input == "3")
+    {
+        cout << ">> Input message: ";
+        string message;
+        getline(cin, message);
+        tlv.type = 3;
+        cout << "type=3, message=" + message << endl;
+        strcpy(tlv.data, message.c_str());
+        tlv.length = strlen(tlv.data);
+    }
+    else
+    {
+        cout << "Invalid input. Try again.\n";
+        break;
+    }
+
+    int ret = send(cfd, &tlv, 8 + tlv.length, 0);
+    if (ret == -1)
+    {
+        perror("client send");
+        return;
+    }
+    cout << "Sent " << ret << " bytes: " << tlv.data << endl;
 }
 
 // 接收数据
