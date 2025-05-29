@@ -17,7 +17,7 @@ typedef struct
 void connectToServer(int &cfd, const char *ip, int port)
 {
     // 创建套接字
-    int cfd = socket(AF_INET, SOCK_STREAM, 0);
+    cfd = socket(AF_INET, SOCK_STREAM, 0);
     ERROR_CHECK(cfd, -1, "socket");
 
     // 设置服务器地址
@@ -38,7 +38,7 @@ void sendData(int cfd)
 {
     while (true)
     {
-        cout << ">> Input (1 to send username, 2 to send username and password, q to quit): ";
+        cout << ">> Input (1 to send username, 2 to send username and password, 3 to send a message, q to quit): ";
         string input;
         getline(cin, input);
 
@@ -71,12 +71,11 @@ void sendData(int cfd)
         }
         else if (input == "3")
         {
-            //发送数据
             cout << ">> Input message: ";
             string message;
             getline(cin, message);
             tlv.type = 3;
-            strcpy(tlv.data, ("type=3,message=" + message).c_str());
+            strcpy(tlv.data, ("type=3, message=" + message).c_str());
             tlv.length = strlen(tlv.data);
         }
         else
@@ -111,6 +110,7 @@ void receiveData(int cfd)
         else if (ret == 0)
         {
             cout << "Server closed the connection.\n";
+            close(cfd);
             break;
         }
         buffer[ret] = '\0'; // 确保字符串以'\0'结尾
@@ -135,9 +135,13 @@ int main()
         FD_SET(STDIN_FILENO, &set);
         FD_SET(cfd, &set);
 
-        select(cfd + 1, &set, NULL, NULL, NULL);
+        int ret = select(cfd + 1, &set, NULL, NULL, NULL);
+        if (ret == -1)
+        {
+            perror("select");
+            break;
+        }
 
-        cout << ">> input:";
         if (FD_ISSET(cfd, &set))
         {
             receiveData(cfd);

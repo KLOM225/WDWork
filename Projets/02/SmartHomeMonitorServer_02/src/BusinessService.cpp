@@ -22,7 +22,7 @@ void UserLoginSection1::process()
         MySql sql;
 
         // 检查用户是否存在
-        if (sql.user_exists(username))
+        if (sql.user_exists(username.c_str()))
         {
             // 用户存在：生成随机字符串作为盐值
             char *sp = GenRandomString(username.length());
