@@ -1,16 +1,18 @@
-# 定义变量
-SRCS:=$(wildcard *.c)
-OBJS:=$(patsubst %.c,%, $(SRCS))
+INC_DIR:= ./
+SRC_DIR:= ./
+SRCS:= $(wildcard *.cc)
+OBJS:= $(patsubst %.cc, %.o, $(SRCS))
+LIBS:= 
 
-all:$(OBJS)
+CXX:=g++
 
-%:%.c
-	gcc -o $@ $^
+CXXFLAGS:= -w -g  $(addprefix -I, $(INC_DIR)) $(LIBS) 
+
+EXE:=./server.exe
+
+$(EXE):$(OBJS)
+	$(CXX) -o $@ $^ $(CXXFLAGS)
 
 clean:
+	rm -rf $(EXE)
 	rm -rf $(OBJS)
-
-# 打印变量的信息
-echo:
-	@echo $(SRCS)
-	@echo $(OBJS)
