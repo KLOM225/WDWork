@@ -12,8 +12,8 @@
 EventLoop::EventLoop(Acceptor & a)
 : _epfd(createEpollFd())
 , _eventfd(createEventFd())
-, _acceptor(a)
 , _isLooping(false)
+, _acceptor(a)
 , _eventArr(100)
 {
     addEpollReadEvent(_acceptor.fd());
