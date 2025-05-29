@@ -14,6 +14,7 @@ public:
 
     //业务逻辑的处理
     void process();
+    char *GenRandomString(int length);
 
 private:
     void getSetting(string & s, const char * passwd);

@@ -14,13 +14,13 @@ using std::endl;
 
 int main(void)
 {
-    Configuration * pconf = Configuration::getInstance();
+    Configuration *pconf = Configuration::getInstance();
     SmartHomeMonitorServer server(
-            atoi(pconf->getConfigMap()["thread_num"].c_str()), 
-            atoi(pconf->getConfigMap()["task_num"].c_str()),
-            atoi(pconf->getConfigMap()["port"].c_str()));
+        atoi(pconf->getConfigMap()["thread_num"].c_str()),
+        atoi(pconf->getConfigMap()["task_num"].c_str()),
+        atoi(pconf->getConfigMap()["port"].c_str()));
 
     server.start();
 
-	return 0;
+    return 0;
 }

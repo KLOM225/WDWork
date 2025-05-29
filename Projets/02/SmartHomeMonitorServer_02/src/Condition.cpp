@@ -1,13 +1,10 @@
 #include "Condition.hpp"
-#include "MutexLock.hpp"  //在实现文件中才使用MutexLock的头文件
+#include "MutexLock.hpp" //在实现文件中才使用MutexLock的头文件
 #include <iostream>
 #include <pthread.h>
 
-
-
-
-Condition::Condition(MutexLock & m)
-: _mutex(m)
+Condition::Condition(MutexLock &m)
+    : _mutex(m)
 {
     pthread_cond_init(&_cond, nullptr);
 }

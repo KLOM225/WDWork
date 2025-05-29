@@ -2,7 +2,6 @@
 #include <iostream>
 #include <pthread.h>
 
-
 MutexLock::MutexLock()
 {
     pthread_mutex_init(&_mutex, nullptr);
@@ -22,6 +21,3 @@ void MutexLock::unlock()
 {
     pthread_mutex_unlock(&_mutex);
 }
-
-
-

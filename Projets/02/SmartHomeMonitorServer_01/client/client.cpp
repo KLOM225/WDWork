@@ -1,0 +1,131 @@
+#include "head.h"
+
+#include <iostream>
+#include <cstring>
+#include <unistd.h>
+#include <arpa/inet.h>
+using namespace std;
+
+typedef struct
+{
+    int type;
+    int length;
+    char data[1000];
+} TLV;
+
+// 连接服务器
+void connectToServer(int &cfd, const char *ip, int port)
+{
+    // 创建套接字
+    cfd = socket(AF_INET, SOCK_STREAM, 0);
+    ERROR_CHECK(cfd, -1, "socket");
+
+    // 设置服务器地址
+    struct sockaddr_in serveraddr;
+    memset(&serveraddr, 0, sizeof(serveraddr));
+    serveraddr.sin_family = AF_INET;
+    serveraddr.sin_port = htons(port);
+    serveraddr.sin_addr.s_addr = inet_addr(ip);
+
+    
+    int ret = connect(cfd, (const struct sockaddr *)&serveraddr, sizeof(serveraddr));
+    ERROR_CHECK(ret, -1, "connect");
+    cout << "Connection established with server.\n";
+}
+
+void sendData(int cfd)
+{
+    while (true)
+    {
+        cout << ">> Input (1 to send username, 2 to send username and password, q to quit): ";
+        string input;
+        getline(cin, input);
+
+        if (input == "q")
+        {
+            cout << "Exiting...\n";
+            break;
+        }
+
+        TLV tlv;
+        memset(&tlv, 0, sizeof(tlv));
+
+        if (input == "1")
+        {
+            tlv.type = 1;
+            strcpy(tlv.data, "type=1,username=ning");
+            tlv.length = strlen(tlv.data);
+        }
+        else if (input == "2")
+        {
+            tlv.type = 2;
+            strcpy(tlv.data, "type=4,username=ning,password=123");
+            tlv.length = strlen(tlv.data);
+        }
+        else
+        {
+            cout << "Invalid input. Try again.\n";
+            continue;
+        }
+
+        int ret = send(cfd, &tlv, 8 + tlv.length, 0);
+        if (ret == -1)
+        {
+            perror("send");
+            break;
+        }
+        cout << "Sent " << ret << " bytes: " << tlv.data << endl;
+    }
+}
+
+void receiveData(int cfd)
+{
+    char buffer[1024];
+    while (true)
+    {
+        memset(buffer, 0, sizeof(buffer));
+        int ret = recv(cfd, buffer, sizeof(buffer) - 1, 0);
+        if (ret == -1)
+        {
+            perror("recv");
+            break;
+        }
+        else if (ret == 0)
+        {
+            cout << "Server closed the connection.\n";
+            break;
+        }
+        cout << "Received " << ret << " bytes: " << buffer << endl;
+    }
+}
+
+int main()
+{
+    int cfd;
+    const char *serverIP = "192.168.42.128";
+    int serverPort = 8100;
+
+    connectToServer(cfd, serverIP, serverPort);
+
+    while (1)
+    {
+        FD_ZERO(&set);
+        FD_SET(STDIN_FILENO, &set);
+        FD_SET(cfd, &set);
+
+        select(cfd + 1, &set, NULL, NULL, NULL);
+
+        cout << ">> input:";
+        if (FD_ISSET(cfd, &set))
+        {
+            receiveData(cfd);
+        }
+        if (FD_ISSET(STDIN_FILENO, &set))
+        {
+            sendData(cfd);
+        }
+    }
+
+    close(cfd);
+    return 0;
+}
