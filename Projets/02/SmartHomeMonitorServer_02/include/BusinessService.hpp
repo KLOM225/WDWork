@@ -11,6 +11,7 @@ public:
     UserLoginSection1(TcpConnectionPtr conn, const Packet & p)
     : _conn(conn)
     , _packet(p)
+    , _mysql()
     {}
 
     //业务逻辑的处理
@@ -32,6 +33,7 @@ public:
     UserLoginSection2(TcpConnectionPtr conn, const Packet & p)
     : _conn(conn)
     , _packet(p)
+    , _mysql()
     {}
 
     //业务逻辑的处理
