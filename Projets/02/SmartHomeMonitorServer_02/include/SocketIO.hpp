@@ -1,6 +1,7 @@
 #ifndef __SOCKETIO_HPP__
 #define __SOCKETIO_HPP__
 
+#include "TLV.hpp"
 
 class SocketIO
 {
