@@ -1,5 +1,3 @@
-#include "head.hpp"
-
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
@@ -18,7 +16,10 @@ void connectToServer(int &cfd, const char *ip, int port)
 {
     // 创建套接字
     cfd = socket(AF_INET, SOCK_STREAM, 0);
-    ERROR_CHECK(cfd, -1, "socket");
+    if(cfd == -1) {
+        perror("socket");
+        return;
+    }
 
     // 设置服务器地址
     struct sockaddr_in serveraddr;
@@ -29,7 +30,10 @@ void connectToServer(int &cfd, const char *ip, int port)
 
     // 连接服务器
     int ret = connect(cfd, (const struct sockaddr *)&serveraddr, sizeof(serveraddr));
-    ERROR_CHECK(ret, -1, "connect");
+    if(ret == -1) {
+        perror("connect");
+        return;
+    }
     cout << "Connection established with server.\n";
 }
 
