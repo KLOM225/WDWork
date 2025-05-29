@@ -140,7 +140,7 @@ int main()
     {
         
         FD_ZERO(&set);
-        FD_SET(STDIN_FILENO, &set)
+        FD_SET(STDIN_FILENO, &set);
         FD_SET(cfd, &set);
 
         int ret = select(cfd + 1, &set, NULL, NULL, NULL);
