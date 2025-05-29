@@ -36,8 +36,6 @@ int main()
         select(cfd +1, &set, NULL, NULL, NULL);
         
         cout << ">> input:";
-        string line;
-        cin >> line;
         
         if(FD_ISSET(cfd, &set)){
             // 接收缓冲区需要足够大
@@ -67,12 +65,14 @@ int main()
         }
 
          if(FD_ISSET(STDIN_FILENO, &set)){
-            char buf[60] = {0};
-            memset(buf,0,sizeof(buf));
-            read(STDIN_FILENO, buf, sizeof(buf));
-            printf("stdio: %s\n",buf);
+            // char buf[60] = {0};
+            // memset(buf,0,sizeof(buf));
+            // read(STDIN_FILENO, buf, sizeof(buf));
+            // printf("stdio: %s\n",buf);
 
-
+        string line;
+        cin >> line;
+        
         int id = 1;
         int len = line.length();
         //测试: 发用户名
