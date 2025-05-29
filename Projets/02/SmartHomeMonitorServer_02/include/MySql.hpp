@@ -16,14 +16,13 @@ class MySql
 {
 public:
     MySql()
+    :conn(NULL)
     {
         // 初始化MySQL连接
-        conn = mysql_init(NULL);
         if (!conn)
         {
             fprintf(stderr, "MySQL initialization failed\n");
         }
-         
         connect();
 
     }
