@@ -11,15 +11,15 @@ using std::endl;
 
 
 
- SmartHomeMonitorServer::SmartHomeMonitorServer(int num, int quesize, unsigned short port, const string & ip = "0.0.0.0")
- : _threadpool(num, quesize)
- , _server(port, ip)
- {
-        using namespace std::placeholders;
-        _server.setAllCallbacks(
-            std::bind(&SmartHomeMonitorServer::onConnection, this, _1),
-            std::bind(&SmartHomeMonitorServer::onMessage, this, _1),
-            std::bind(&SmartHomeMonitorServer::onClose, this, _1));
+SmartHomeMonitorServer::SmartHomeMonitorServer(int num, int quesize, unsigned short port, const string & ip = "0.0.0.0")
+: _threadpool(num, quesize)
+, _server(port, ip)
+{
+    using namespace std::placeholders;
+    _server.setAllCallbacks(
+        std::bind(&SmartHomeMonitorServer::onConnection, this, _1),
+        std::bind(&SmartHomeMonitorServer::onMessage, this, _1),
+        std::bind(&SmartHomeMonitorServer::onClose, this, _1));
 }
 
 void SmartHomeMonitorServer::start()
@@ -64,6 +64,7 @@ void SmartHomeMonitorServer::onMessage(TcpConnectionPtr conn)
         {}
         break;
     }
+}
 
 void SmartHomeMonitorServer::onClose(TcpConnectionPtr conn)
 {
