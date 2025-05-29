@@ -1,5 +1,5 @@
-#ifndef __WD_TCPCONNECTION_H__
-#define __WD_TCPCONNECTION_H__
+#ifndef __TCPCONNECTION_HPP__
+#define __TCPCONNECTION_HPP__
 
 #include "Noncopyable.hpp"
 #include "Socket.hpp"
@@ -12,8 +12,6 @@
 using std::string;
 using std::shared_ptr;
 
-namespace wd
-{
 
 class EventLoop;
 
@@ -30,8 +28,11 @@ public:
 	~TcpConnection();
 
 	string receive();
+    int TcpConnection::readPacket(Packet & packet);
+
 	void send(const string & msg);
     void sendInLoop(const string & msg);
+    void sendInLoop(const TLV & tlv);
 
 	string toString() const;//获取五元组信息
 	void shutdown();
@@ -82,6 +83,6 @@ private:
 
 };
 
-}//end of namespace wd
+
 
 #endif

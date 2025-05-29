@@ -1,5 +1,5 @@
-#ifndef __TaskQueue_H__
-#define __TaskQueue_H__
+#ifndef __TaskQueue_HPP__
+#define __TaskQueue_HPP__
 
 #include "MutexLock.hpp"
 #include "Condition.hpp"
@@ -8,11 +8,9 @@
 #include <iostream>
 #include <queue>
 
-namespace wd
-{
 
 //设置一个元素类型
-using ElemType=wd::Task;
+using ElemType=Task;
 
 class TaskQueue
 {
@@ -37,8 +35,6 @@ private:
     bool _flag;
 
 };
-
-}//end of namespace wd
 
 
 #endif

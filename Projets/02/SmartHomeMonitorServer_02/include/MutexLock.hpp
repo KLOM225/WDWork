@@ -1,11 +1,9 @@
-#ifndef __MutexLock_H__
-#define __MutexLock_H__
+#ifndef __MutexLock_HPP__
+#define __MutexLock_HPP__
 #include "Noncopyable.hpp"
 
 #include <pthread.h>
 
-namespace wd
-{
 
 class MutexLock : Noncopyable
 {
@@ -40,8 +38,6 @@ private:
     MutexLock & _mutex;
 };
 
-}//end of namespace wd
 
-
-#endif
+#endif   // __MutexLock_HPP__
 

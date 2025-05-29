@@ -1,10 +1,7 @@
-
 #include "InetAddress.hpp"
 
 #include <string.h>
 
-namespace wd
-{
 
 InetAddress::InetAddress(unsigned short port)
 {
@@ -37,4 +34,3 @@ unsigned short InetAddress::port() const
 	return ntohs(_addr.sin_port);
 }
 
-}//end of namespace wd

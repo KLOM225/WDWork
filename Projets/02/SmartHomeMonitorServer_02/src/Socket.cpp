@@ -6,8 +6,6 @@
 #include <sys/socket.h>
 
 
-namespace wd
-{
 
 Socket::Socket()
 {
@@ -34,4 +32,3 @@ Socket::~Socket()
 }
 
 
-}//end of namespace wd

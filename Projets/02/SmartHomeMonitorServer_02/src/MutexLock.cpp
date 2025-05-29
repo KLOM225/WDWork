@@ -2,8 +2,6 @@
 #include <iostream>
 #include <pthread.h>
 
-namespace wd
-{
 
 MutexLock::MutexLock()
 {
@@ -26,4 +24,4 @@ void MutexLock::unlock()
 }
 
 
-}//end of namespace wd
+

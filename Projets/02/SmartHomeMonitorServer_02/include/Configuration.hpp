@@ -1,84 +1,38 @@
-#ifndef CONFIGURATION_HPP
-#define CONFIGURATION_HPP
+#ifndef __CONFIGURATION_H__
+#define __CONFIGURATION_H__
 
-#include <fstream>
+#include <map>
 #include <string>
-#include <stdexcept>
-#include <cstdint>
-#include <algorithm>
 
-// 创建类Configuration，通过它读取服务器程序的输入信息
-// 读取配置文件的代码，从../SmartHomeMonitorServer/conf/server.conf
-// 辅助函数：去除字符串前后空格
+using namespace std;
 
 
-class Configuration {
+class Configuration
+{
+    class AutoRelease
+    {
+    public:
+        AutoRelease(){}
+        ~AutoRelease() {
+            if(_pInstance) {
+                delete _pInstance;
+                _pInstance = nullptr;
+            }
+        }
+    };
 public:
-    // 删除拷贝构造函数和赋值运算符
-    Configuration(const Configuration&) = delete;
-    Configuration& operator=(const Configuration&) = delete;
-
-    // 获取单例实例 (支持首次调用指定配置文件路径)
-    static Configuration& getInstance(const std::string& config_file_path = "conf/server.conf") {
-        static Configuration instance(config_file_path);
-        return instance;
-    }
-
-    
-
-    // 获取配置参数
-    std::string GetIP() const { return ip_; }
-    uint16_t GetPort() const { return port_; }
-    int GetThreadNum() const { return thread_num_; }
-    int GetTaskNum() const { return task_num_; }
-    std::string GetVideoPath() const { return video_path_; }
-    std::string GetLogFile() const { return log_file_; }
-
+    static Configuration * getInstance();
+	map<string, string> & getConfigMap();
+    void display() const;
 private:
-    explicit Configuration(const std::string& config_file_path = "conf/server.conf");
-    
-    std::string ip_;
-    uint16_t port_ = 0;
-    int thread_num_ = 0;
-    int task_num_ = 0;
-    std::string video_path_;
-    std::string log_file_;
+    Configuration();
+    ~Configuration();
 
-    void ParseLine(const std::string &line);
-    void Validate() const;
-    static void trim(std::string& s);
+	void readConfiguration();
+private:
+	map<string, string> _configMap;
+    static Configuration * _pInstance;
+    static AutoRelease _ar;
 };
 
-
-#endif // CONFIGURATION_HPP
-
-// class Configuration {
-// private:
-//     std::map<std::string, std::string> configMap;
-//     Configuration() {}
-
-// public:
-//     static Configuration& getInstance() {
-//         static Configuration instance;
-//         return instance;
-//     }
-
-//     bool load(const std::string& filepath) {
-//         std::ifstream infile(filepath);
-//         if (!infile.is_open()) return false;
-//         std::string key, value;
-//         while (infile >> key >> value) {
-//             configMap[key] = value;
-//         }
-//         return true;
-//     }
-
-//     std::string get(const std::string& key) const {
-//         auto it = configMap.find(key);
-//         return it != configMap.end() ? it->second : "";
-//     }
-
-//     int getInt(const std::string& key) const {
-//         return std::stoi(get(key));
-//     }
-// };
+#endif  

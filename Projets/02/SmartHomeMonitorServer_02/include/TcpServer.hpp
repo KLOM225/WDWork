@@ -1,11 +1,10 @@
-#ifndef __TcpServer_H__
-#define __TcpServer_H__
+#ifndef __TcpServer_HPP__
+#define __TcpServer_HPP__
+
 #include "Acceptor.hpp"
 #include "EventLoop.hpp"
 #include "TcpConnection.hpp"
 
-namespace wd
-{
 
 class TcpServer
 {
@@ -37,8 +36,6 @@ private:
     Acceptor _acceptor;
     EventLoop _loop;
 };
-
-}//end of namespace wd
 
 
 #endif

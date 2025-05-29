@@ -6,8 +6,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-namespace wd
-{
 
 SocketIO::SocketIO(int fd)
 : _fd(fd)
@@ -77,6 +75,26 @@ int SocketIO::recvPeek(char * buff, int len) const
 	return ret;
 }
 
+int SocketIO::readPacket(Packet & packet)
+{
+    //TLV： type(4B)|length(4B)| value
+    //当legnth为0时，表示没有value
+    //type+length 可以认为是packet的header头部
+    //value 可以认为是packet的body消息体
+    int type, length;
+    readn((char*)&type, sizeof(type));
+    readn((char*)&length, sizeof(length));
+    if(length > 0) {
+        char * pbuf = new char[length + 1]();
+        int ret = readn(pbuf, length);//要确保读取length个字节的数据,不能仅仅只是使用recv
+        packet.type = type;
+        packet.length = length;
+        packet.msg.assign(pbuf, length);//复制length个字节的数据，保存到string中
+        delete [] pbuf;//切记不要忘了释放
+        return ret + 8;
+    } 
+    return 8;
+}
 	
 int SocketIO::writen(const char * buff, int len)
 {
@@ -97,4 +115,3 @@ int SocketIO::writen(const char * buff, int len)
 	return len - left;
 }
 
-}//end of namespace wd

@@ -10,8 +10,7 @@
 using std::vector;
 using std::map;
 
-namespace wd
-{
+
 
 using Functor = std::function<void()>;
 class Acceptor;
@@ -64,7 +63,6 @@ private:
     TcpConnectionCallback _onClose;
 };
 
-}// end of namespace wd
 
 
 #endif

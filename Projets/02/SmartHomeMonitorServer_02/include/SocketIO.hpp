@@ -1,8 +1,5 @@
-#ifndef __WD_SOCKETIO_H__
-#define __WD_SOCKETIO_H__
-
-namespace wd
-{
+#ifndef __SOCKETIO_HPP__
+#define __SOCKETIO_HPP__
 
 
 class SocketIO
@@ -16,10 +13,9 @@ public:
 	int writen(const char * buff, int len);
 	int recvPeek(char * buff, int len) const;
 
+	int readPacket(Packet & packet);
 private:
 	int _fd;
 };
-
-}//end of namespace wd
 
 #endif 

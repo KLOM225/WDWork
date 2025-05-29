@@ -1,15 +1,11 @@
-#ifndef __Task_H__
-#define __Task_H__
+#ifndef __Task_HPP__
+#define __Task_HPP__
 
 #include <functional>
 
-namespace wd
-{
 
 using Task=std::function<void()>;
 
-}//end of namespace wd
 
-
-#endif
+#endif  // __Task_HPP__
 

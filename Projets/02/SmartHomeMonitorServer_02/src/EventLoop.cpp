@@ -9,9 +9,6 @@
 
 
 
-namespace wd
-{
-
 EventLoop::EventLoop(Acceptor & a)
 : _epfd(createEpollFd())
 , _eventfd(createEventFd())
@@ -198,4 +195,4 @@ int EventLoop::createEventFd()
     return fd;
 }
 
-}//end of namespace wd
+

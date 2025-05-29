@@ -6,8 +6,6 @@
 using std::cout;
 using std::endl;
 
-namespace wd
-{
 
 Threadpool::Threadpool(int n, int sz)
 : _threadNum(n)
@@ -82,4 +80,3 @@ void Threadpool::stop()
     } 
 }
 
-}//end of namespace wd

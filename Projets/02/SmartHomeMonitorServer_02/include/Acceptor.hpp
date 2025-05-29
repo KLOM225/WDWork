@@ -4,8 +4,6 @@
 #include "InetAddress.hpp"
 #include "Socket.hpp"
 
-namespace wd
-{
 
 class Acceptor
 {
@@ -26,6 +24,6 @@ private:
 	Socket _listensock;
 };
 
-}//end of namespace wd
+
 
 #endif

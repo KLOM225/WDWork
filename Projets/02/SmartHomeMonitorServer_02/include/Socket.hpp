@@ -1,10 +1,8 @@
-#ifndef __WD_SOCKET_H__
-#define __WD_SOCKET_H__
+#ifndef __SOCKET_HPP__
+#define __SOCKET_HPP__
 
 #include "Noncopyable.hpp"
 
-namespace wd
-{
 
 class Socket
 : Noncopyable  //继承自Noncopyable类，禁止复制
@@ -24,7 +22,5 @@ private:
 	int _fd;
 };
 
-}//end of namespace wd
 
-
-#endif
+#endif // __SOCKET_HPP__

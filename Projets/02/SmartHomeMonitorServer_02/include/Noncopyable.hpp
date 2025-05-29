@@ -1,8 +1,7 @@
-#ifndef __Noncopyable_H__
-#define __Noncopyable_H__
+#ifndef __Noncopyable_HPP__
+#define __Noncopyable_HPP__
 
-namespace wd
-{
+
 class Noncopyable
 {
 public:
@@ -15,9 +14,6 @@ public:
 
 };
 
-}//end of namespace wd
 
-
-
-#endif
+#endif // __Noncopyable_HPP__
 

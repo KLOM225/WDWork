@@ -5,8 +5,6 @@
 #include <string>
 using std::string;
 
-namespace wd
-{
 
 class InetAddress
 {
@@ -24,6 +22,5 @@ private:
 	struct sockaddr_in _addr;
 };
 
-}//end of namespace wd
-
 #endif
+

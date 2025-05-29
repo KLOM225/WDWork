@@ -2,8 +2,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-namespace wd
-{
 
 Acceptor::Acceptor(unsigned short port, const string & ip)
 : _addr(ip, port)
@@ -71,4 +69,4 @@ int Acceptor::accept()
 	return peerfd;
 }
 
-}//end of namespace wd
+

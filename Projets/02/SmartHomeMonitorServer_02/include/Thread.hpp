@@ -1,5 +1,5 @@
-#ifndef __Thread_H__
-#define __Thread_H__
+#ifndef __Thread_HPP__
+#define __Thread_HPP__
 
 #include "Noncopyable.hpp"
 
@@ -8,8 +8,6 @@
 
 #include <functional>
 
-namespace wd
-{
 
 //std::function是函数的容器
 using ThreadCallback = std::function<void()>;
@@ -34,8 +32,6 @@ private:
     ThreadCallback _cb;//函数对象保存要执行的函数
 };
 
-
-}//end of namespace wd
 
 
 #endif

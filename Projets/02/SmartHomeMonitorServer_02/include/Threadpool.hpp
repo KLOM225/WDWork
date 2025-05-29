@@ -1,5 +1,5 @@
-#ifndef __Threadpool_H__
-#define __Threadpool_H__
+#ifndef __Threadpool_HPP__
+#define __Threadpool_HPP__
 
 #include "Thread.hpp"
 #include "TaskQueue.hpp"
@@ -9,8 +9,6 @@
 using std::vector;
 using std::unique_ptr;
 
-namespace wd
-{
 
 class Threadpool
 {
@@ -31,8 +29,7 @@ private:
     TaskQueue _taskque;
 };
 
-}//end of namespace wd
 
 
-#endif
+#endif // __Threadpool_HPP__
 

@@ -1,4 +1,3 @@
-
 #include "Thread.hpp" // 1. 放的自定义头文件
 
 #include <stdio.h>    // 2. C的头文件
@@ -9,8 +8,6 @@
 //#include <log4cpp/Category.hh>  //4. 第三方库头文件
 
 
-namespace wd
-{
 
 Thread::Thread(ThreadCallback && cb)
 : _pthid(0)
@@ -54,5 +51,4 @@ void Thread::join()
 }
 
 
-}//end of namespace wd
 

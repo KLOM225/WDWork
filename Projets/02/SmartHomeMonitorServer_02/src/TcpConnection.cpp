@@ -1,6 +1,7 @@
 #include "TcpConnection.hpp"
 #include "InetAddress.hpp"
 #include "EventLoop.hpp"
+#include "TLV.hpp"
 
 #include <errno.h>
 #include <stdlib.h>
@@ -8,8 +9,7 @@
 
 #include <sstream>
 
-namespace wd
-{
+
 TcpConnection::TcpConnection(int fd, EventLoop * p)
 : _sock(fd)
 , _socketIo(fd)
@@ -34,6 +34,11 @@ string TcpConnection::receive()
 	_socketIo.readline(buff, sizeof(buff));
 	return string(buff);
 }
+
+int TcpConnection::readPacket(Packet & packet)
+{
+    return _socketIo.readPacket(packet);
+}
 	
 void TcpConnection::send(const string & msg)
 {
@@ -46,6 +51,17 @@ void TcpConnection::sendInLoop(const string & msg)
         _ploop->runInLoop(std::bind(&TcpConnection::send, this, msg));
     }
 }
+
+void TcpConnection::sendInLoop(const TLV & tlv)
+{
+
+	
+	tlvlen = sizeof(tlv.type) + sizeof(tlv.length) + tlv.length;
+	string msg;
+	msg.assign((const char*)&data, tlvlen);
+	sendInLoop(msg);
+}
+
 
 void TcpConnection::shutdown()
 {
@@ -114,4 +130,4 @@ InetAddress TcpConnection::getPeerAddr(int fd)
 	return InetAddress(addr);
 }
 
-}//end of namespace wd
+
