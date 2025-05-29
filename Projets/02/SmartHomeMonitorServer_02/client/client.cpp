@@ -17,7 +17,7 @@ typedef struct
 void connectToServer(int &cfd, const char *ip, int port)
 {
     // 创建套接字
-    cfd = socket(AF_INET, SOCK_STREAM, 0);
+    int cfd = socket(AF_INET, SOCK_STREAM, 0);
     ERROR_CHECK(cfd, -1, "socket");
 
     // 设置服务器地址
