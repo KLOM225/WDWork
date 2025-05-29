@@ -1,7 +1,8 @@
 # 编译器和编译选项
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude
+CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude  -llog4cpp -lcrypt
 LDFLAGS := 
+LIBS:= 
 
 # 目标可执行文件名
 TARGET := server
