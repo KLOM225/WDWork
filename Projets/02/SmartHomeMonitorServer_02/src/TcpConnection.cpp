@@ -53,11 +53,9 @@ void TcpConnection::sendInLoop(const string & msg)
 
 void TcpConnection::sendInLoop(const TLV & tlv)
 {
-
-	
-	tlvlen = sizeof(tlv.type) + sizeof(tlv.length) + tlv.length;
+	int tlvlen = sizeof(tlv.type) + sizeof(tlv.length) + tlv.length;
 	string msg;
-	msg.assign((const char*)&data, tlvlen);
+	msg.assign((const char*)&tlv, tlvlen);
 	sendInLoop(msg);
 }
 
