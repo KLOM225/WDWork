@@ -1,6 +1,8 @@
 #ifndef MYSQL_HPP
 #define MYSQL_HPP
 
+#include "Mylogger.hpp"
+
 #include <stdio.h>       // 标准输入输出函数（如printf, fprintf）
 #include <stdlib.h>      // 标准库函数（如EXIT_SUCCESS, EXIT_FAILURE, atoi）
 #include <mysql/mysql.h> // MySQL C API头文件

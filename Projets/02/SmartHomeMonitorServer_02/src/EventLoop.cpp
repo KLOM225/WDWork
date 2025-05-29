@@ -56,7 +56,7 @@ void EventLoop::waitEpollFd()
         perror("epoll_wait");
         return ;
     } else if(nready == 0) {
-        printf("epoll timeout.\n");
+        //printf("epoll timeout.\n");
     } else {
         //nready > 0
         for(int i = 0; i < nready; ++i) {
