@@ -1,6 +1,6 @@
 #include "BusinessService.hpp"
 #include "Mylogger.hpp"
-#include "MySql.hpp"
+
 
 #include <shadow.h>
 #include <string.h>
@@ -19,10 +19,9 @@ void UserLoginSection1::process()
     {
         // 消息内容为用户名
         string username = _packet.msg;
-        MySql sql;
-
+        
         // 检查用户是否存在
-        if (sql.user_exists(username.c_str()))
+        if (_mysql.user_exists(username.c_str()))
         {
             // 用户存在：生成随机字符串作为盐值
             char *sp = GenRandomString(username.length());
@@ -30,6 +29,8 @@ void UserLoginSection1::process()
             // 获取要发送给对端的setting（盐值）
             string setting;
             getSetting(setting, sp);
+            free(sp); // 释放动态分配的内存
+            // 打印调试信息
             LogDebug("Existing user setting: %s\n", setting.c_str());
 
             // 构造TLV，发送给对端（成功）
@@ -53,7 +54,7 @@ void UserLoginSection1::process()
             LogDebug("New user setting: %s\n", setting.c_str());
 
             // 3. 创建新用户（设置加密密文为空，后续阶段补充）
-            if (sql.add_user(username, setting, ""))
+            if (_mysql.add_user(username, setting, ""))
             {
                 LogDebug("New user created successfully");
 
@@ -114,7 +115,7 @@ char *UserLoginSection1::GenRandomString(int length)
         printf("malloc failed!flag:14\n");
         return NULL;
     }
-    for (i = 0; i < length + 1; i++)
+    for (i = 0; i < (length + 1); i++)
     {
         flag = rand() % 3;
         switch (flag)

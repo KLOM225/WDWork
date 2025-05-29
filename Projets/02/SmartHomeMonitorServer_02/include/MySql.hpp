@@ -78,6 +78,28 @@ public:
             // 结果集获取失败
             fprintf(stderr, "Result error: %s\n", mysql_error(conn));
             return -1;
+        }else{
+               //row的值为一个大于0的值, 说明已经有数据了
+        int row = mysql_num_rows(res);
+        int col = mysql_num_fields(res);
+        printf("result (%d row, %d col)\n\n", row, col);
+
+        //打印字段名
+        MYSQL_FIELD  *filed = NULL;
+        while((filed = mysql_fetch_field(res)) != NULL) {
+            printf("%s\t", filed->name);
+        }
+        printf("\n");
+        
+        //打印每一行数据
+        MYSQL_ROW strRow;
+        while((strRow = mysql_fetch_row(res))!= NULL)  {
+            //strRow是一个字符串数组
+            for(int i = 0; i < col; ++i) {
+                printf("%s\t", strRow[i]);
+            }
+            printf("\n");
+        }
         }
 
         // 从结果集中提取第一行数据
