@@ -8,7 +8,7 @@ CXX:=g++
 
 CXXFLAGS:= -w -g  $(addprefix -I, $(INC_DIR)) $(LIBS) 
 
-EXE:=./server.exe
+EXE:=./client.exe
 
 $(EXE):$(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS)

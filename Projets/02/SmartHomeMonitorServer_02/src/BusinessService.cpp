@@ -19,10 +19,11 @@ void UserLoginSection1::process()
     {
         // 消息内容为用户名
         string username = _packet.msg;
-        _mysql.connect(); // 确保数据库连接已建立
+        
         
         // 检查用户是否存在
-        if (_mysql.user_exists(username.c_str()))
+        //if (_mysql.user_exists(username.c_str()))
+        if (_mysql->user_exists(username.c_str()))
         {
             // 用户存在：生成随机字符串作为盐值
             char *sp = GenRandomString(username.length());
@@ -55,7 +56,7 @@ void UserLoginSection1::process()
             LogDebug("New user setting: %s\n", setting.c_str());
 
             // 3. 创建新用户（设置加密密文为空，后续阶段补充）
-            if (_mysql.add_user(username, setting, ""))
+            if (_mysql->add_user(username, setting, ""))
             {
                 LogDebug("New user created successfully");
 
