@@ -2,12 +2,11 @@
 #include <iostream>
 using namespace std;
 
-struct TLV
-{
+typedef struct {
     int type;
     int length;
-    char data[1000];
-};
+    char value[1000];   // 变长数据
+} TLV;
 
 int main()
 {
@@ -66,7 +65,7 @@ int main()
             
             if(strcmp(buf,"1\n") == 0){
                 TLV tlv;
-                tlv.type = 2;
+                tlv.type = 1;
                 strcpy(tlv.value,"type=1,username=ning");
                 tlv.length = strlen(tlv.value);
                 printf("%s\n", tlv.value);
