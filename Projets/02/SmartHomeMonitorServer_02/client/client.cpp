@@ -88,7 +88,7 @@ void sendData(int cfd)
     else
     {
         cout << "Invalid input. Try again.\n";
-        break;
+        return;
     }
 
     int ret = send(cfd, &tlv, 8 + tlv.length, 0);
