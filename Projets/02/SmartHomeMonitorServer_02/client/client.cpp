@@ -78,7 +78,7 @@ void sendData(int cfd, char *salt, string &username)
         char *encrypted = crypt(password.c_str(), salt);
         tlv.type = 4;
         cout << "type=4, username=" + username + ", encrypted=" + encrypted << endl;
-        strcpy(tlv.data, (username + encrypted).c_str());
+        strcpy(tlv.data, (username + "$" + encrypted).c_str());
         tlv.length = strlen(tlv.data);
     }
     else if (input == "7")
