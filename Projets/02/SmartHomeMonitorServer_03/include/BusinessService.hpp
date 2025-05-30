@@ -17,7 +17,7 @@ public:
 
     //业务逻辑的处理
     void process1();
-    string generateSecureSalt(int length)
+    string generateSecureSalt(int length);
     
     void process2();
     void sendAuthResponse(bool success);

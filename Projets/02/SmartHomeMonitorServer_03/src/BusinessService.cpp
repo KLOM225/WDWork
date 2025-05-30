@@ -6,6 +6,8 @@
 #include <string>
 #include <iostream>
 #include <random>
+#include <memory>
+#include <cstring>
 
 using std::cout;
 using std::endl;
