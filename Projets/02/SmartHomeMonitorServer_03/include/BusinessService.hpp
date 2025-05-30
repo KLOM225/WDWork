@@ -17,9 +17,10 @@ public:
 
     //业务逻辑的处理
     void process1();
-    char *GenRandomString(int length);
+    string generateSecureSalt(int length)
     
     void process2();
+    void sendAuthResponse(bool success);
 
 private:
     void getSetting(string & s, const char * passwd);

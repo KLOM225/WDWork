@@ -1,7 +1,7 @@
 #include "BusinessService.hpp"
 #include "Mylogger.hpp"
 
-#include <QCryptographicHash> // 使用Qt加密库保持一致性
+//#include <QCryptographicHash> // 使用Qt加密库保持一致性
 
 #include <string>
 #include <iostream>
@@ -122,7 +122,7 @@ void UserLoginSection::process2()
         else
         {
             // 在服务器端重新计算加密结果进行验证
-            string server_encrypted = encryptPassword("", salt); // 此处需要真实密码
+            //string server_encrypted = encryptPassword("", salt); // 此处需要真实密码
             
             /*
             实际实现应该：
@@ -176,9 +176,9 @@ string UserLoginSection::generateSecureSalt(int length)
     return salt;
 }
 
-string UserLoginSection::encryptPassword(const string& password, const string& salt)
-{
-    QByteArray data = QByteArray::fromStdString(salt + password);
-    QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha256);
-    return hash.toHex().toStdString();
-}
+// string UserLoginSection::encryptPassword(const string& password, const string& salt)
+// {
+//     QByteArray data = QByteArray::fromStdString(salt + password);
+//     QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha256);
+//     return hash.toHex().toStdString();
+//}
