@@ -169,7 +169,7 @@ int main()
 
         if (FD_ISSET(STDIN_FILENO, &set))
         {
-            sendData(cfd, salt, &name);
+            sendData(cfd, salt, name);
         }
     }
 
