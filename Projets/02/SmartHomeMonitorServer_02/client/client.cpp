@@ -138,7 +138,7 @@ int main()
     int cfd;
     const char *serverIP = "192.168.42.128";
     int serverPort = 8100;
-    char * salt = nullptr;
+    char salt[128] = {0};
     connectToServer(cfd, serverIP, serverPort);
 
     fd_set set;
@@ -151,7 +151,7 @@ int main()
 
         int ret = select(cfd + 1, &set, NULL, NULL, NULL);
 
-        cout << ">> Input (1 to send username, 2 to send username and password, 3 to send a message, q to quit): " << endl;
+        cout << ">> Input (1 to send username, 4 to send username and password, 7 to send a message, q to quit): " << endl;
         if (ret == -1)
         {
             perror("select");
