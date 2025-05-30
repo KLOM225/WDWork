@@ -2,7 +2,7 @@ INC_DIR:= ./
 SRC_DIR:= ./
 SRCS:= $(wildcard *.cpp)
 OBJS:= $(patsubst %.cpp, %.o, $(SRCS))
-LIBS:= 
+LIBS:= -lcrypt
 
 CXX:=g++
 
