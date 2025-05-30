@@ -164,7 +164,7 @@ int main()
 
         if (FD_ISSET(cfd, &set))
         {
-            receiveData(cfd, salt);
+            receiveData(cfd, salt, username);
         }
 
         if (FD_ISSET(STDIN_FILENO, &set))
