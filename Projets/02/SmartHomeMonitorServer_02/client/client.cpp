@@ -127,7 +127,7 @@ void receiveData(int cfd,char * salt)
     buffer[ret] = '\0'; // 确保字符串以'\0'结尾
     cout << "Received " << ret << " bytes: " << buffer << endl;
     TLV *tlv = reinterpret_cast<TLV *>(buffer);
-    if(tlv->type == '2'){
+    if(tlv->type == "2"){
         salt = tlv->data;
     }
     cout << "Type: " << tlv->type << ", Length: " << tlv->length << ", Data: " << tlv->data << endl;
