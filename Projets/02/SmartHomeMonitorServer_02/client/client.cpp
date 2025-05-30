@@ -44,12 +44,12 @@ void connectToServer(int &cfd, const char *ip, int port)
 }
 
 // 发送数据
-void sendData(int cfd, char *salt)
+void sendData(int cfd, char *salt, string username)
 {
     
     string input;
     getline(cin, input);
-    string username;
+    
     if (input == "q")
     {
         cout << "Exiting...\n";
@@ -61,6 +61,7 @@ void sendData(int cfd, char *salt)
 
     if (input == "1")
     {
+        username.clear();
         cout << ">> Input username: ";
         
         getline(cin, username);
@@ -75,7 +76,6 @@ void sendData(int cfd, char *salt)
         string password;
         getline(cin, password);
         char *encrypted = crypt(password.c_str(), salt);
-        
         tlv.type = 4;
         cout << "type=4, username=" + username + ", encrypted=" + encrypted << endl;
         strcpy(tlv.data, (username + encrypted).c_str());
@@ -138,19 +138,23 @@ int main()
     int cfd;
     const char *serverIP = "192.168.42.128";
     int serverPort = 8100;
-    char salt[128] = {0};
+    
     connectToServer(cfd, serverIP, serverPort);
-
+    
+    string username;
+    char salt[128] = {0};
     fd_set set;
+    
     while (1)
     {
         
         FD_ZERO(&set);
         FD_SET(STDIN_FILENO, &set);
         FD_SET(cfd, &set);
-
+        
         int ret = select(cfd + 1, &set, NULL, NULL, NULL);
-
+        
+        
         cout << ">> Input (1 to send username, 4 to send username and password, 7 to send a message, q to quit): " << endl;
         if (ret == -1)
         {
