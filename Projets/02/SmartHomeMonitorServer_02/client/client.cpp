@@ -128,7 +128,8 @@ void receiveData(int cfd,char * salt)
     cout << "Received " << ret << " bytes: " << buffer << endl;
     TLV *tlv = reinterpret_cast<TLV *>(buffer);
     if(tlv->type == 2){
-        salt = tlv->data;
+        memset(salt, 0, sizeof(salt));
+        memcpy(salt, tlv->data, tlv->length);
     }
     cout << "Type: " << tlv->type << ", Length: " << tlv->length << ", Data: " << tlv->data << endl;
 }
