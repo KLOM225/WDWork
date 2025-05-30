@@ -51,14 +51,14 @@ void SmartHomeMonitorServer::onMessage(TcpConnectionPtr conn)
     {
     case TASK_TYPE_LOGIN_SECTION1:
     {
-        UserLoginSection1 userLogin1(conn, packet);
-        _threadpool.addTask(std::bind(&UserLoginSection1::process, userLogin1));
+        UserLoginSection userLogin1(conn, packet);
+        _threadpool.addTask(std::bind(&UserLoginSection::process1, userLogin1));
     }
     break;
     case TASK_TYPE_LOGIN_SECTION2:
     {
-        UserLoginSection2 userLogin2(conn, packet);
-        _threadpool.addTask(std::bind(&UserLoginSection2::process, userLogin2));
+        UserLoginSection userLogin2(conn, packet);
+        _threadpool.addTask(std::bind(&UserLoginSection::process2, userLogin2));
     }
     break;
     }
