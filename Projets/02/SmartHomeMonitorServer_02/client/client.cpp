@@ -44,7 +44,7 @@ void connectToServer(int &cfd, const char *ip, int port)
 }
 
 // 发送数据
-void sendData(int cfd, char *salt, string username)
+void sendData(int cfd, char *salt, string &username)
 {
     
     string input;
@@ -141,7 +141,7 @@ int main()
     
     connectToServer(cfd, serverIP, serverPort);
     
-    string username;
+    string name;
     char salt[128] = {0};
     fd_set set;
     
@@ -164,12 +164,12 @@ int main()
 
         if (FD_ISSET(cfd, &set))
         {
-            receiveData(cfd, salt, username);
+            receiveData(cfd, salt);
         }
 
         if (FD_ISSET(STDIN_FILENO, &set))
         {
-            sendData(cfd, salt);
+            sendData(cfd, salt, &name);
         }
     }
 
