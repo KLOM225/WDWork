@@ -123,7 +123,7 @@ void UserLoginSection::process2()
         if (db_encrypted.empty())
         {
             // 注册新用户
-            _mysql->add_user(username, salt, encrypted);
+            _mysql->update_user_credentials(username, salt, encrypted);
         }
         else
         {
@@ -132,11 +132,13 @@ void UserLoginSection::process2()
             {
                 // 登录成功
                 cout << "Login successful!" << endl;
+                LogDebug("User %s logged in successfully.", username.c_str());
             }
             else
             {
                 // 登录失败
                 cout << "Login failed!" << endl;
+                LogDebug("User %s login failed.", username.c_str());
             }
         }
     }
