@@ -166,7 +166,26 @@ public:
         mysql_free_result(result);
         return setting;
     }
+   
     
+    // 获取加密密文
+    std::string get_encrypt(const std::string& username) {
+        std::string query = "SELECT encrypt FROM users WHERE name = '" + 
+                            escape_string(username) + "'";
+        
+        MYSQL_RES* result = execute_query(query);
+        if (!result) return "";
+        
+        std::string encrypt;
+        MYSQL_ROW row = mysql_fetch_row(result);
+        if (row && row[0]) {
+            encrypt = row[0];
+        }
+        
+        mysql_free_result(result);
+        return encrypt;
+    }
+
 private:
     // SQL注入防护：转义特殊字符
     std::string escape_string(const std::string &input)

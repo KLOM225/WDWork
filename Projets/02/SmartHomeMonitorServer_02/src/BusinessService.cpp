@@ -10,7 +10,7 @@ using std::cout;
 using std::endl;
 
 // 该函数运行在计算线程
-void UserLoginSection1::process()
+void UserLoginSection::process1()
 {
     cout << "login section 1 is processing" << endl;
     // 执行用户登录的阶段1操作
@@ -23,7 +23,7 @@ void UserLoginSection1::process()
         // if (_mysql.user_exists(username.c_str()))
         if (_mysql->user_exists(username.c_str()))
         {
-            // +++ 修改点1: 从数据库获取现有用户的盐值 +++
+            //  从数据库获取现有用户的盐值 
             string setting = _mysql->get_setting(username);
 
             if (!setting.empty())
@@ -82,7 +82,7 @@ void UserLoginSection1::process()
     }
 }
 
-void UserLoginSection1::getSetting(string &s, const char *passwd)
+void UserLoginSection::getSetting(string &s, const char *passwd)
 {
     int i, j;
     // 取出salt,i 记录密码字符下标，j记录$出现次数
@@ -98,16 +98,51 @@ void UserLoginSection1::getSetting(string &s, const char *passwd)
     cout << s << endl;
 }
 
-void UserLoginSection2::process()
+void UserLoginSection::process2()
 {
     cout << "login section 2 is processing" << endl;
     // 执行用户登录的阶段2操作
     if (_packet.type == TASK_TYPE_LOGIN_SECTION2)
     {
+        // 消息内容为用户名+ 加密密文
+        // 获取用户名和加密密文
+        size_t pos = _packet.msg.find_first_of('$');
+        if (pos == string::npos)
+        {
+            cout << "Invalid packet format, missing '$' separator." << endl;
+            return;
+        }
+        string username = _packet.msg.substr(0, pos);
+        string encrypted = _packet.msg.substr(pos + 1);
+        
+        //与数据库中对应用户名，盐值的加密密文相比较
+        //如果没有则注册并添加，存在则比较是否一致
+        string salt = _mysql->get_setting(username);
+        string db_encrypted = _mysql->get_encrypt(username);
+        
+        if (db_encrypted.empty())
+        {
+            // 注册新用户
+            _mysql->add_user(username, salt, encrypted);
+        }
+        else
+        {
+            // 比较加密密文
+            if (db_encrypted == encrypted)
+            {
+                // 登录成功
+                cout << "Login successful!" << endl;
+            }
+            else
+            {
+                // 登录失败
+                cout << "Login failed!" << endl;
+            }
+        }
     }
 }
 
-char *UserLoginSection1::GenRandomString(int length)
+char *UserLoginSection::GenRandomString(int length)
 {
     int flag, i;
     char *string;

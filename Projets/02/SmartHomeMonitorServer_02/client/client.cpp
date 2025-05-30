@@ -2,6 +2,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <crypt.h>
 using namespace std;
 
 
@@ -43,12 +44,12 @@ void connectToServer(int &cfd, const char *ip, int port)
 }
 
 // 发送数据
-void sendData(int cfd)
+void sendData(int cfd, char *salt)
 {
     
     string input;
     getline(cin, input);
-
+    string username;
     if (input == "q")
     {
         cout << "Exiting...\n";
@@ -61,7 +62,7 @@ void sendData(int cfd)
     if (input == "1")
     {
         cout << ">> Input username: ";
-        string username;
+        
         getline(cin, username);
         tlv.type = 1;
         cout << "type=1, username=" + username << endl;
@@ -73,9 +74,11 @@ void sendData(int cfd)
         cout << ">> Input password: ";
         string password;
         getline(cin, password);
-        tlv.type = 2;
-        cout << "type=2, password=" + password << endl;
-        strcpy(tlv.data, password.c_str());
+        char *encrypted = crypt(password.c_str(), salt);
+        
+        tlv.type = 4;
+        cout << "type=4, username=" + username + ", encrypted=" + encrypted << endl;
+        strcpy(tlv.data, (username + encrypted).c_str());
         tlv.length = strlen(tlv.data);
     }
     else if (input == "7")
@@ -83,8 +86,8 @@ void sendData(int cfd)
         cout << ">> Input message: ";
         string message;
         getline(cin, message);
-        tlv.type = 3;
-        cout << "type=3, message=" + message << endl;
+        tlv.type = 7;
+        cout << "type=7, message=" + message << endl;
         strcpy(tlv.data, message.c_str());
         tlv.length = strlen(tlv.data);
     }
@@ -104,7 +107,7 @@ void sendData(int cfd)
 }
 
 // 接收数据
-void receiveData(int cfd)
+void receiveData(int cfd,char * salt)
 {
     char buffer[1024];
 
@@ -124,6 +127,9 @@ void receiveData(int cfd)
     buffer[ret] = '\0'; // 确保字符串以'\0'结尾
     cout << "Received " << ret << " bytes: " << buffer << endl;
     TLV *tlv = reinterpret_cast<TLV *>(buffer);
+    if(tlv->type == '2'){
+        salt = tlv->data;
+    }
     cout << "Type: " << tlv->type << ", Length: " << tlv->length << ", Data: " << tlv->data << endl;
 }
 
@@ -132,7 +138,7 @@ int main()
     int cfd;
     const char *serverIP = "192.168.42.128";
     int serverPort = 8100;
-
+    char * salt = nullptr;
     connectToServer(cfd, serverIP, serverPort);
 
     fd_set set;
@@ -154,12 +160,12 @@ int main()
 
         if (FD_ISSET(cfd, &set))
         {
-            receiveData(cfd);
+            receiveData(cfd, salt);
         }
 
         if (FD_ISSET(STDIN_FILENO, &set))
         {
-            sendData(cfd);
+            sendData(cfd, salt);
         }
     }
 
