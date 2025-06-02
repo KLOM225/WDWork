@@ -44,6 +44,7 @@ void SmartHomeMonitorServer::onMessage(TcpConnectionPtr conn)
     cout << "packet.type: " << packet.type << endl
          << "packet.length:" << packet.length << endl
          << "packet.msg:" << packet.msg << endl;
+    LogInfo("packet.msg:  %s\n", packet.msg.c_str());
 
     // handleTask((wd::TaskType)packet.type);
     switch (packet.type)

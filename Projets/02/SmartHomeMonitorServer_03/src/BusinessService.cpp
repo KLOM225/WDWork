@@ -33,6 +33,7 @@ void UserLoginSection::process1()
                 tlv.type = TASK_TYPE_LOGIN_SECTION1_RESP_OK;
                 tlv.length = salt.length();
                 strncpy(tlv.data, salt.c_str(), tlv.length);
+                cout << "Type: " << tlv.type << ", Length: " << tlv.length << ", Data: " << tlv.data << endl;
                 _conn->sendInLoop(tlv);
             }
             else
