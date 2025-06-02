@@ -22,8 +22,8 @@ public:
     void process2();
     void sendAuthResponse(bool success);
 
-private:
-    void getSetting(string & s, const char * passwd);
+// private:
+    // void getSetting(string & s, const char * passwd);
 
 private:
     TcpConnectionPtr _conn;

@@ -37,14 +37,13 @@ void SmartHomeMonitorServer::onConnection(TcpConnectionPtr conn)
 
 void SmartHomeMonitorServer::onMessage(TcpConnectionPtr conn)
 {
-
-    cout << "onMessage..." << endl;
+    LogInfo("tcp %s has sent a message.\n", conn->toString().c_str());
     Packet packet; // 解析TLV格式之后的消息放在packet中
     int ret = conn->readPacket(packet);
-    cout << "read:" << ret << "bytes.\n";
+    cout << "read:" << ret << " bytes." << endl;
     cout << "packet.type: " << packet.type << endl
          << "packet.length:" << packet.length << endl
-         << "pakcet.msg:" << packet.msg << endl;
+         << "packet.msg:" << packet.msg << endl;
 
     // handleTask((wd::TaskType)packet.type);
     switch (packet.type)

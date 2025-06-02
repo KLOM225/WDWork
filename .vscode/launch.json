@@ -43,8 +43,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/Users/MyDocuments/WD/WDTask/Projets/02/SmartHomeMonitorServer_02/client",
-      "program": "d:/Users/MyDocuments/WD/WDTask/Projets/02/SmartHomeMonitorServer_02/client/build/Debug/outDebug",
+      "cwd": "d:/Users/MyDocuments/WD/WDTask/Projets/02/SmartHomeMonitorServer_03",
+      "program": "d:/Users/MyDocuments/WD/WDTask/Projets/02/SmartHomeMonitorServer_03/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -19,7 +19,7 @@ void UserLoginSection::process1()
     if (_packet.type == TASK_TYPE_LOGIN_SECTION1)
     {
         string username = _packet.msg;
-
+        LogDebug("Received login1 request for user: %s\n", username.c_str());
         // 检查用户是否存在
         if (_mysql->user_exists(username.c_str()))
         {
@@ -79,9 +79,11 @@ void UserLoginSection::process1()
 void UserLoginSection::process2()
 {
     cout << "login section 2 is processing" << endl;
+    LogDebug("Received login2 request for user: %s\n", _packet.msg.c_str());
     if (_packet.type == TASK_TYPE_LOGIN_SECTION2)
     {
         size_t pos = _packet.msg.find_first_of('$');
+        
         if (pos == string::npos)
         {
             cout << "Invalid packet format" << endl;
