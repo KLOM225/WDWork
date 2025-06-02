@@ -141,7 +141,13 @@ void UserLoginSection::process2()
             if (db_encrypted == client_encrypted)
             {
                 LogDebug("User %s logged in successfully", username.c_str());
-                sendAuthResponse(true);
+                //sendAuthResponse(true);
+                    
+                TLV tlv;
+                tlv.type = 0;//用户登录成功
+                tlv.length = 1;
+                strncpy(tlv.data, 0, tlv.length);
+                 _conn->sendInLoop(tlv);
             }
             else
             {
