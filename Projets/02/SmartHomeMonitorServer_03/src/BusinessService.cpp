@@ -146,8 +146,8 @@ void UserLoginSection::process2()
                 TLV tlv;
                 tlv.type = 0;//用户登录成功
                 tlv.length = 1;
-                strncpy(tlv.data, 0, tlv.length);
-                 _conn->sendInLoop(tlv);
+                strncpy(tlv.data, "0", tlv.length);
+                _conn->sendInLoop(tlv);
             }
             else
             {
